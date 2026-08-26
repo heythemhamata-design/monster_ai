@@ -44,15 +44,10 @@ body{
   position:relative;
 }
 
-/* =========================================================
-   3D SPACE
-========================================================= */
-
 .space{
   position:fixed;
   inset:0;
   overflow:hidden;
-
   background:
     radial-gradient(
       circle at 50% 50%,
@@ -62,23 +57,15 @@ body{
     #000;
 }
 
-/* =========================================================
-   3D FLOOR
-========================================================= */
-
 .grid{
   position:absolute;
-
   width:180%;
   height:180%;
-
   left:-40%;
   top:25%;
-
   transform:
     perspective(800px)
     rotateX(67deg);
-
   background-image:
     linear-gradient(
       rgba(0,234,255,.08) 1px,
@@ -89,23 +76,19 @@ body{
       rgba(0,234,255,.08) 1px,
       transparent 1px
     );
-
   background-size:55px 55px;
-
   mask-image:
     radial-gradient(
       ellipse at center,
       black 10%,
       transparent 72%
     );
-
   -webkit-mask-image:
     radial-gradient(
       ellipse at center,
       black 10%,
       transparent 72%
     );
-
   animation:gridMove 18s linear infinite;
 }
 
@@ -116,7 +99,6 @@ body{
       rotateX(67deg)
       translateY(0);
   }
-
   to{
     transform:
       perspective(800px)
@@ -124,10 +106,6 @@ body{
       translateY(55px);
   }
 }
-
-/* =========================================================
-   PARTICLES
-========================================================= */
 
 .particles{
   position:absolute;
@@ -137,12 +115,9 @@ body{
 
 .particle{
   position:absolute;
-
   width:var(--s);
   height:var(--s);
-
   border-radius:50%;
-
   background:
     radial-gradient(
       circle at 30% 30%,
@@ -151,20 +126,16 @@ body{
       #00cfff 48%,
       transparent 72%
     );
-
   box-shadow:
     0 0 calc(var(--s)*3)
       rgba(0,230,255,.8),
-
     0 0 calc(var(--s)*8)
       rgba(0,120,255,.35);
-
   animation:
     float var(--d)
     ease-in-out
     infinite
     alternate,
-
     blink 3s
     ease-in-out
     infinite;
@@ -176,7 +147,6 @@ body{
       translate3d(0,0,0)
       scale(.8);
   }
-
   to{
     transform:
       translate3d(
@@ -192,15 +162,10 @@ body{
   0%,100%{
     opacity:.2;
   }
-
   50%{
     opacity:1;
   }
 }
-
-/* =========================================================
-   BIG ORBS
-========================================================= */
 
 .orb{
   position:absolute;
@@ -212,10 +177,8 @@ body{
 .orb.one{
   width:260px;
   height:260px;
-
   left:-70px;
   top:12%;
-
   background:
     radial-gradient(
       circle at 35% 30%,
@@ -223,11 +186,9 @@ body{
       rgba(0,125,255,.16) 42%,
       transparent 70%
     );
-
   box-shadow:
     0 0 100px
       rgba(0,210,255,.13);
-
   animation:
     orbOne 12s
     ease-in-out
@@ -238,10 +199,8 @@ body{
 .orb.two{
   width:340px;
   height:340px;
-
   right:-120px;
   top:48%;
-
   background:
     radial-gradient(
       circle at 35% 35%,
@@ -249,7 +208,6 @@ body{
       rgba(80,50,255,.13) 45%,
       transparent 71%
     );
-
   animation:
     orbTwo 15s
     ease-in-out
@@ -260,17 +218,14 @@ body{
 .orb.three{
   width:150px;
   height:150px;
-
   right:27%;
   top:-60px;
-
   background:
     radial-gradient(
       circle,
       rgba(0,255,180,.45),
       transparent 68%
     );
-
   animation:
     orbThree 9s
     ease-in-out
@@ -299,26 +254,17 @@ body{
   }
 }
 
-/* =========================================================
-   APP UI
-========================================================= */
-
 .ui{
   position:relative;
   z-index:5;
-
   width:100%;
   height:100%;
-
   padding:18px;
-
   display:grid;
-
   grid-template-columns:
     230px
     minmax(0,1fr)
     220px;
-
   gap:16px;
 }
 
@@ -329,39 +275,570 @@ body{
       rgba(20,25,36,.70),
       rgba(3,5,9,.64)
     );
-
   border:1px solid var(--border);
-
   backdrop-filter:
     blur(28px)
     saturate(145%);
-
   -webkit-backdrop-filter:
     blur(28px)
     saturate(145%);
-
   box-shadow:
     inset 0 1px
       rgba(255,255,255,.055),
-
     0 30px 90px
       rgba(0,0,0,.55);
 }
 
-/* =========================================================
-   SIDEBAR
-========================================================= */
-
 .sidebar{
   border-radius:24px;
   padding:16px;
-
   display:flex;
   flex-direction:column;
-
   transform:
     perspective(1000px)
     rotateY(3deg);
+  transition:
+    background .3s ease,
+    border-color .3s ease,
+    box-shadow .3s ease,
+    backdrop-filter .3s ease,
+    -webkit-backdrop-filter .3s ease,
+    transform .3s ease;
+  background:
+    rgba(5,8,14,.07);
+  border:
+    1px solid
+    rgba(255,255,255,.025);
+  backdrop-filter:
+    blur(5px)
+    saturate(110%);
+  -webkit-backdrop-filter:
+    blur(5px)
+    saturate(110%);
+  box-shadow:none;
+}
+
+.sidebar:hover{
+  transform:
+    perspective(1000px)
+    rotateY(0deg);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(20,25,36,.72),
+      rgba(3,5,9,.66)
+    );
+  border-color:
+    rgba(255,255,255,.11);
+  backdrop-filter:
+    blur(28px)
+    saturate(145%);
+  -webkit-backdrop-filter:
+    blur(28px)
+    saturate(145%);
+  box-shadow:
+    inset 0 1px
+      rgba(255,255,255,.055),
+    0 30px 90px
+      rgba(0,0,0,.55);
+}
+
+.logoRow{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin-bottom:20px;
+  position:relative;
+  z-index:2;
+}
+
+.logo{
+  width:48px;
+  height:48px;
+  display:grid;
+  place-items:center;
+  border-radius:14px;
+  background:transparent;
+  border:0;
+  overflow:visible;
+  position:relative;
+  flex-shrink:0;
+  box-shadow:
+    0 0 22px
+      rgba(0,220,255,.20);
+}
+
+.logo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  background:transparent;
+  border:0;
+  filter:
+    drop-shadow(
+      0 0 8px
+      rgba(0,234,255,.25)
+    )
+    drop-shadow(
+      0 0 18px
+      rgba(0,120,255,.12)
+    );
+}
+
+.sidebar .logo,
+.sidebar .logo img,
+.sidebar .logoTitle,
+.sidebar .logoSub{
+  opacity:1 !important;
+  visibility:visible !important;
+}
+
+.logoTitle{
+  font-size:14px;
+  font-weight:800;
+  color:#fff;
+  text-shadow:
+    0 0 12px
+      rgba(255,255,255,.08);
+}
+
+.logoSub{
+  font-size:8px;
+  color:#627086;
+  letter-spacing:.15em;
+  margin-top:4px;
+}
+
+.new{
+  height:44px;
+  border:
+    1px solid
+    rgba(0,234,255,.25);
+  border-radius:13px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0,234,255,.11),
+      rgba(80,100,255,.10)
+    );
+  color:#fff;
+  font-weight:700;
+  font-size:10px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.new:hover{
+  border-color:
+    rgba(0,234,255,.55);
+  box-shadow:
+    0 0 25px
+      rgba(0,220,255,.10);
+}
+
+.label{
+  margin:
+    22px 8px 8px;
+  font-size:8px;
+  color:#515d72;
+  text-transform:uppercase;
+  letter-spacing:.15em;
+}
+
+.chat{
+  padding:11px;
+  border-radius:10px;
+  color:#7b879c;
+  font-size:10px;
+  margin-bottom:3px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.chat.active{
+  color:#fff;
+  border:
+    1px solid
+    rgba(0,234,255,.13);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0,234,255,.09),
+      rgba(90,90,255,.08)
+    );
+}
+
+.chat:hover{
+  background:
+    rgba(255,255,255,.04);
+  color:white;
+}
+
+.sidebarBottom{
+  margin-top:auto;
+  padding-top:12px;
+  border-top:
+    1px solid
+    var(--border);
+}
+
+.sideStat{
+  display:flex;
+  justify-content:space-between;
+  font-size:8px;
+  padding:6px 2px;
+  color:#59657a;
+}
+
+.sideStat strong{
+  color:#d2d9e5;
+}
+
+.center{
+  min-width:0;
+  border-radius:26px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  transform:
+    perspective(1400px)
+    translateZ(0);
+}
+
+.header{
+  height:66px;
+  flex-shrink:0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 18px;
+  border-bottom:
+    1px solid
+    var(--border);
+  background:
+    rgba(0,0,0,.26);
+}
+
+.headLeft{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.mobile{
+  display:none;
+}
+
+.title{
+  font-weight:800;
+  font-size:13px;
+}
+
+.online{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:#74e6b5;
+  font-size:8px;
+  padding:7px 9px;
+  border-radius:999px;
+  background:
+    rgba(0,255,170,.035);
+  border:
+    1px solid
+    rgba(0,255,170,.13);
+}
+
+.onlineDot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:
+    var(--green);
+  box-shadow:
+    0 0 10px
+    var(--green);
+}
+
+.headRight{
+  display:flex;
+  gap:7px;
+}
+
+select,
+.icon{
+  height:33px;
+  border:
+    1px solid
+    var(--border);
+  border-radius:9px;
+  background:
+    rgba(255,255,255,.025);
+  color:#cbd3df;
+  cursor:pointer;
+}
+
+select{
+  padding:0 9px;
+  font-size:8px;
+  outline:none;
+}
+
+.icon{
+  width:33px;
+}
+
+.chatArea{
+  flex:1;
+  min-height:0;
+  position:relative;
+}
+
+.messages{
+  position:absolute;
+  inset:0;
+  overflow:auto;
+  padding:
+    30px
+    5vw
+    180px;
+}
+
+.messages::-webkit-scrollbar{
+  width:6px;
+}
+
+.messages::-webkit-scrollbar-thumb{
+  background:
+    rgba(255,255,255,.08);
+  border-radius:20px;
+}
+
+.hero{
+  max-width:820px;
+  margin:
+    25px auto
+    38px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:8px;
+  color:#6ceeff;
+  letter-spacing:.13em;
+  padding:7px 10px;
+  border-radius:999px;
+  border:
+    1px solid
+    rgba(0,234,255,.18);
+  background:
+    rgba(0,234,255,.035);
+}
+
+.hero h1{
+  max-width:820px;
+  margin:20px 0 0;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+  font-size:
+    clamp(
+      34px,
+      4vw,
+      56px
+    );
+  font-weight:700;
+  line-height:1.08;
+  letter-spacing:-.035em;
+  color:#fff;
+  background:none;
+  -webkit-background-clip:initial;
+  background-clip:initial;
+  -webkit-text-fill-color:#fff;
+  text-shadow:
+    0 1px 12px
+    rgba(255,255,255,.045);
+  text-wrap:balance;
+  transition:
+    opacity .25s ease,
+    transform .25s ease;
+}
+
+.hero p{
+  max-width:610px;
+  color:#657187;
+  font-size:12px;
+  line-height:1.8;
+  margin-top:18px;
+}
+
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:18px;
+}
+
+.tag{
+  font-size:8px;
+  padding:7px 9px;
+  border-radius:999px;
+  border:
+    1px solid
+    var(--border);
+  background:
+    rgba(255,255,255,.018);
+  color:#667286;
+}
+
+.message{
+  max-width:820px;
+  margin:
+    0 auto 24px;
+  display:flex;
+  gap:10px;
+}
+
+.message.user{
+  justify-content:flex-end;
+}
+
+.avatar{
+  width:31px;
+  height:31px;
+  min-width:31px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  font-size:8px;
+  font-weight:800;
+  border:
+    1px solid
+    var(--border);
+}
+
+.aiAvatar{
+  color:#71f0ff;
+  background:
+    rgba(0,234,255,.07);
+}
+
+.youAvatar{
+  background:
+    rgba(255,255,255,.05);
+  color:#e0e5ee;
+}
+
+.content{
+  max-width:
+    min(760px,85%);
+}
+
+.messageHead{
+  font-size:8px;
+  color:#536076;
+  margin:
+    2px 0
+    6px;
+}
+
+.bubble{
+  color:#d7dee9;
+  line-height:1.75;
+  font-size:12px;
+}
+
+.user .bubble{
+  padding:12px 14px;
+  border-radius:
+    16px
+    7px
+    16px
+    16px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(64,112,255,.14),
+      rgba(0,234,255,.035)
+    );
+  border:
+    1px solid
+    rgba(70,120,255,.15);
+}
+
+.bubble pre{
+  padding:14px;
+  overflow:auto;
+  border-radius:13px;
+  background:#010202;
+  border:
+    1px solid
+    rgba(255,255,255,.07);
+}
+
+.bubble code{
+  font-family:
+    Consolas,
+    monospace;
+  font-size:10px;
+}
+
+.bubble :not(pre)>code{
+  background:
+    rgba(0,0,0,.4);
+  padding:2px 5px;
+  border-radius:5px;
+}
+
+.bubble p{
+  margin:
+    0 0 10px;
+}
+
+.bubble p:last-child{
+  margin-bottom:0;
+}
+
+.copy{
+  opacity:0;
+  margin-top:5px;
+  background:none;
+  border:0;
+  color:#4d596c;
+  font-size:8px;
+  cursor:pointer;
+}
+
+.message:hover .copy{
+  opacity:1;
+}
+
+.messageImg{
+  max-width:290px;
+  display:block;
+  border-radius:13px;
+  margin-bottom:8px;
+}
+
+/* =========================================================
+   RIGHT PANEL — GLASS HOVER
+========================================================= */
+
+.right{
+  border-radius:24px;
+  padding:14px;
+
+  transform:
+    perspective(1000px)
+    rotateY(-3deg);
 
   transition:
     background .3s ease,
@@ -371,11 +848,7 @@ body{
     -webkit-backdrop-filter .3s ease,
     transform .3s ease;
 
-  /*
-    الوضع الطبيعي:
-    شفافية عالية جداً
-  */
-
+  /* Transparent by default */
   background:
     rgba(5,8,14,.07);
 
@@ -394,16 +867,13 @@ body{
   box-shadow:none;
 }
 
-.sidebar:hover{
+.right:hover{
+
   transform:
     perspective(1000px)
     rotateY(0deg);
 
-  /*
-    عند لمس الماوس:
-    تظهر الخانة الزجاجية
-  */
-
+  /* Glass appears on hover */
   background:
     linear-gradient(
       145deg,
@@ -430,773 +900,56 @@ body{
       rgba(0,0,0,.55);
 }
 
-/* =========================================================
-   LOGO
-========================================================= */
-
-.logoRow{
-  display:flex;
-  align-items:center;
-
-  gap:11px;
-
-  margin-bottom:20px;
-
-  position:relative;
-  z-index:2;
-}
-
-.logo{
-  width:48px;
-  height:48px;
-
-  display:grid;
-  place-items:center;
-
-  border-radius:14px;
-
-  /*
-    مهم:
-    لا توجد خلفية خلف الشعار
-  */
-
-  background:transparent;
-
-  border:0;
-
-  overflow:visible;
-
-  position:relative;
-
-  flex-shrink:0;
-
-  box-shadow:
-    0 0 22px
-      rgba(0,220,255,.20);
-}
-
-.logo img{
-  width:100%;
-  height:100%;
-
-  object-fit:contain;
-
-  display:block;
-
-  background:transparent;
-
-  border:0;
-
-  filter:
-    drop-shadow(
-      0 0 8px
-      rgba(0,234,255,.25)
-    )
-
-    drop-shadow(
-      0 0 18px
-      rgba(0,120,255,.12)
-    );
-}
-
-.sidebar .logo,
-.sidebar .logo img,
-.sidebar .logoTitle,
-.sidebar .logoSub{
-  opacity:1 !important;
-  visibility:visible !important;
-}
-
-.logoTitle{
-  font-size:14px;
-  font-weight:800;
-
-  color:#fff;
-
-  text-shadow:
-    0 0 12px
-      rgba(255,255,255,.08);
-}
-
-.logoSub{
-  font-size:8px;
-
-  color:#627086;
-
-  letter-spacing:.15em;
-
-  margin-top:4px;
-}
-
-/* =========================================================
-   NEW BUTTON
-========================================================= */
-
-.new{
-  height:44px;
-
-  border:
-    1px solid
-    rgba(0,234,255,.25);
-
-  border-radius:13px;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(0,234,255,.11),
-      rgba(80,100,255,.10)
-    );
-
-  color:#fff;
-
-  font-weight:700;
-  font-size:10px;
-
-  cursor:pointer;
-
-  transition:.2s;
-}
-
-.new:hover{
-  border-color:
-    rgba(0,234,255,.55);
-
-  box-shadow:
-    0 0 25px
-      rgba(0,220,255,.10);
-}
-
-/* =========================================================
-   SIDEBAR ITEMS
-========================================================= */
-
-.label{
-  margin:
-    22px 8px 8px;
-
-  font-size:8px;
-
-  color:#515d72;
-
-  text-transform:uppercase;
-
-  letter-spacing:.15em;
-}
-
-.chat{
-  padding:11px;
-
-  border-radius:10px;
-
-  color:#7b879c;
-
-  font-size:10px;
-
-  margin-bottom:3px;
-
-  cursor:pointer;
-
-  transition:.2s;
-}
-
-.chat.active{
-  color:#fff;
-
-  border:
-    1px solid
-    rgba(0,234,255,.13);
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(0,234,255,.09),
-      rgba(90,90,255,.08)
-    );
-}
-
-.chat:hover{
-  background:
-    rgba(255,255,255,.04);
-
-  color:white;
-}
-
-.sidebarBottom{
-  margin-top:auto;
-
-  padding-top:12px;
-
-  border-top:
-    1px solid
-    var(--border);
-}
-
-.sideStat{
-  display:flex;
-
-  justify-content:space-between;
-
-  font-size:8px;
-
-  padding:6px 2px;
-
-  color:#59657a;
-}
-
-.sideStat strong{
-  color:#d2d9e5;
-}
-
-/* =========================================================
-   CENTER
-========================================================= */
-
-.center{
-  min-width:0;
-
-  border-radius:26px;
-
-  display:flex;
-  flex-direction:column;
-
-  overflow:hidden;
-
-  transform:
-    perspective(1400px)
-    translateZ(0);
-}
-
-/* =========================================================
-   HEADER
-========================================================= */
-
-.header{
-  height:66px;
-
-  flex-shrink:0;
-
-  display:flex;
-
-  justify-content:space-between;
-
-  align-items:center;
-
-  padding:0 18px;
-
-  border-bottom:
-    1px solid
-    var(--border);
-
-  background:
-    rgba(0,0,0,.26);
-}
-
-.headLeft{
-  display:flex;
-
-  align-items:center;
-
-  gap:11px;
-}
-
-.mobile{
-  display:none;
-}
-
-.title{
-  font-weight:800;
-  font-size:13px;
-}
-
-.online{
-  display:flex;
-
-  align-items:center;
-
-  gap:7px;
-
-  color:#74e6b5;
-
-  font-size:8px;
-
-  padding:7px 9px;
-
-  border-radius:999px;
-
-  background:
-    rgba(0,255,170,.035);
-
-  border:
-    1px solid
-    rgba(0,255,170,.13);
-}
-
-.onlineDot{
-  width:6px;
-  height:6px;
-
-  border-radius:50%;
-
-  background:
-    var(--green);
-
-  box-shadow:
-    0 0 10px
-    var(--green);
-}
-
-.headRight{
-  display:flex;
-
-  gap:7px;
-}
-
-select,
-.icon{
-  height:33px;
-
-  border:
-    1px solid
-    var(--border);
-
-  border-radius:9px;
-
-  background:
-    rgba(255,255,255,.025);
-
-  color:#cbd3df;
-
-  cursor:pointer;
-}
-
-select{
-  padding:0 9px;
-
-  font-size:8px;
-
-  outline:none;
-}
-
-.icon{
-  width:33px;
-}
-
-/* =========================================================
-   CHAT
-========================================================= */
-
-.chatArea{
-  flex:1;
-
-  min-height:0;
-
-  position:relative;
-}
-
-.messages{
-  position:absolute;
-
-  inset:0;
-
-  overflow:auto;
-
-  padding:
-    30px
-    5vw
-    180px;
-}
-
-.messages::-webkit-scrollbar{
-  width:6px;
-}
-
-.messages::-webkit-scrollbar-thumb{
-  background:
-    rgba(255,255,255,.08);
-
-  border-radius:20px;
-}
-
-/* =========================================================
-   HERO
-========================================================= */
-
-.hero{
-  max-width:820px;
-
-  margin:
-    25px auto
-    38px;
-}
-
-.badge{
-  display:inline-flex;
-
-  align-items:center;
-
-  gap:6px;
-
-  font-size:8px;
-
-  color:#6ceeff;
-
-  letter-spacing:.13em;
-
-  padding:7px 10px;
-
-  border-radius:999px;
-
-  border:
-    1px solid
-    rgba(0,234,255,.18);
-
-  background:
-    rgba(0,234,255,.035);
-}
-
-.hero h1{
-  max-width:820px;
-
-  margin:20px 0 0;
-
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Arial,
-    sans-serif;
-
-  font-size:
-    clamp(
-      34px,
-      4vw,
-      56px
-    );
-
-  font-weight:700;
-
-  line-height:1.08;
-
-  letter-spacing:-.035em;
-
-  color:#fff;
-
-  background:none;
-
-  -webkit-background-clip:initial;
-
-  background-clip:initial;
-
-  -webkit-text-fill-color:#fff;
-
-  text-shadow:
-    0 1px 12px
-    rgba(255,255,255,.045);
-
-  text-wrap:balance;
-
-  transition:
-    opacity .25s ease,
-    transform .25s ease;
-}
-
-.hero p{
-  max-width:610px;
-
-  color:#657187;
-
-  font-size:12px;
-
-  line-height:1.8;
-
-  margin-top:18px;
-}
-
-.tags{
-  display:flex;
-
-  flex-wrap:wrap;
-
-  gap:6px;
-
-  margin-top:18px;
-}
-
-.tag{
-  font-size:8px;
-
-  padding:7px 9px;
-
-  border-radius:999px;
-
-  border:
-    1px solid
-    var(--border);
-
-  background:
-    rgba(255,255,255,.018);
-
-  color:#667286;
-}
-
-/* =========================================================
-   MESSAGES
-========================================================= */
-
-.message{
-  max-width:820px;
-
-  margin:
-    0 auto 24px;
-
-  display:flex;
-
-  gap:10px;
-}
-
-.message.user{
-  justify-content:flex-end;
-}
-
-.avatar{
-  width:31px;
-  height:31px;
-
-  min-width:31px;
-
-  border-radius:10px;
-
-  display:grid;
-
-  place-items:center;
-
-  font-size:8px;
-
-  font-weight:800;
-
-  border:
-    1px solid
-    var(--border);
-}
-
-.aiAvatar{
-  color:#71f0ff;
-
-  background:
-    rgba(0,234,255,.07);
-}
-
-.youAvatar{
-  background:
-    rgba(255,255,255,.05);
-
-  color:#e0e5ee;
-}
-
-.content{
-  max-width:
-    min(760px,85%);
-}
-
-.messageHead{
-  font-size:8px;
-
-  color:#536076;
-
-  margin:
-    2px 0
-    6px;
-}
-
-.bubble{
-  color:#d7dee9;
-
-  line-height:1.75;
-
-  font-size:12px;
-}
-
-.user .bubble{
-  padding:12px 14px;
-
-  border-radius:
-    16px
-    7px
-    16px
-    16px;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(64,112,255,.14),
-      rgba(0,234,255,.035)
-    );
-
-  border:
-    1px solid
-    rgba(70,120,255,.15);
-}
-
-.bubble pre{
-  padding:14px;
-
-  overflow:auto;
-
-  border-radius:13px;
-
-  background:#010202;
-
-  border:
-    1px solid
-    rgba(255,255,255,.07);
-}
-
-.bubble code{
-  font-family:
-    Consolas,
-    monospace;
-
-  font-size:10px;
-}
-
-.bubble :not(pre)>code{
-  background:
-    rgba(0,0,0,.4);
-
-  padding:2px 5px;
-
-  border-radius:5px;
-}
-
-.bubble p{
-  margin:
-    0 0 10px;
-}
-
-.bubble p:last-child{
-  margin-bottom:0;
-}
-
-.copy{
-  opacity:0;
-
-  margin-top:5px;
-
-  background:none;
-
-  border:0;
-
-  color:#4d596c;
-
-  font-size:8px;
-
-  cursor:pointer;
-}
-
-.message:hover .copy{
-  opacity:1;
-}
-
-.messageImg{
-  max-width:290px;
-
-  display:block;
-
-  border-radius:13px;
-
-  margin-bottom:8px;
-}
-
-/* =========================================================
-   RIGHT PANEL
-========================================================= */
-
-.right{
-  border-radius:24px;
-
-  padding:14px;
-
-  transform:
-    perspective(1000px)
-    rotateY(-3deg);
-}
-
 .rightTitle{
   font-size:9px;
-
   font-weight:800;
-
   margin:
     2px 4px
     10px;
-
   letter-spacing:.08em;
 }
 
 .metric{
   padding:11px;
-
   margin-bottom:7px;
-
   border-radius:13px;
-
   border:
     1px solid
     rgba(255,255,255,.065);
-
   background:
     rgba(255,255,255,.018);
 }
 
 .metricName{
   font-size:7px;
-
   color:#526076;
-
   text-transform:uppercase;
-
   letter-spacing:.1em;
 }
 
 .metricValue{
   margin-top:5px;
-
   font-size:16px;
-
   font-weight:800;
 }
 
 .metricSub{
   color:#526076;
-
   font-size:7px;
-
   margin-top:2px;
 }
 
-/* =========================================================
-   COMPOSER
-========================================================= */
-
 .composerLayer{
   position:absolute;
-
   z-index:20;
-
   left:0;
   right:0;
   bottom:0;
-
   padding:
     12px
     5vw
     17px;
-
   pointer-events:none;
-
   background:
     linear-gradient(
       to bottom,
@@ -1208,43 +961,32 @@ select{
 
 .composer{
   max-width:820px;
-
   margin:auto;
-
   padding:9px;
-
   border-radius:20px;
-
   pointer-events:auto;
-
   background:
     linear-gradient(
       145deg,
       rgba(18,23,31,.91),
       rgba(3,5,8,.94)
     );
-
   border:
     1px solid
     rgba(255,255,255,.13);
-
   backdrop-filter:
     blur(25px);
-
   -webkit-backdrop-filter:
     blur(25px);
-
   box-shadow:
     0 30px 90px
       rgba(0,0,0,.6),
-
     inset 0 1px
       rgba(255,255,255,.04);
 }
 
 .preview{
   display:none;
-
   padding:3px;
 }
 
@@ -1255,11 +997,8 @@ select{
 .previewImg{
   width:58px;
   height:58px;
-
   object-fit:cover;
-
   border-radius:11px;
-
   border:
     1px solid
     var(--border);
@@ -1267,72 +1006,49 @@ select{
 
 .remove{
   position:absolute;
-
   right:-5px;
   top:-5px;
-
   width:18px;
   height:18px;
-
   border:0;
-
   border-radius:50%;
-
   background:#242934;
-
   color:#fff;
-
   cursor:pointer;
 }
 
 .composerMain{
   display:flex;
-
   align-items:flex-end;
-
   gap:8px;
 }
 
 .attach{
   width:41px;
   height:41px;
-
   border:
     1px solid
     var(--border);
-
   border-radius:11px;
-
   background:
     rgba(255,255,255,.025);
-
   color:#7d8aa0;
-
   font-size:17px;
-
   cursor:pointer;
 }
 
 #input{
   flex:1;
-
   min-height:41px;
   max-height:150px;
-
   resize:none;
-
   border:0;
   outline:0;
-
   color:#fff;
-
   background:transparent;
-
   padding:
     10px 4px;
-
   font-size:12px;
-
   line-height:1.5;
 }
 
@@ -1342,21 +1058,13 @@ select{
 
 .send{
   min-width:78px;
-
   height:41px;
-
   border:0;
-
   border-radius:11px;
-
   color:#fff;
-
   font-size:9px;
-
   font-weight:800;
-
   cursor:pointer;
-
   background:
     linear-gradient(
       135deg,
@@ -1364,7 +1072,6 @@ select{
       #4879ff 55%,
       #a04fff
     );
-
   box-shadow:
     0 12px 30px
       rgba(50,100,255,.25);
@@ -1381,20 +1088,12 @@ select{
 
 .composerMeta{
   display:flex;
-
   justify-content:space-between;
-
   padding:
     7px 3px 0;
-
   color:#465164;
-
   font-size:7px;
 }
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
 
 @media(max-width:1100px){
 
@@ -1413,22 +1112,16 @@ select{
 
   .ui{
     display:block;
-
     padding:0;
   }
 
   .sidebar{
     position:fixed;
-
     z-index:100;
-
     left:-270px;
-
     top:10px;
     bottom:10px;
-
     width:240px;
-
     transition:.25s;
   }
 
@@ -1439,7 +1132,6 @@ select{
   .center{
     width:100%;
     height:100%;
-
     border-radius:0;
   }
 
@@ -1488,10 +1180,6 @@ select{
 </div>
 
 <div class="ui">
-
-<!-- =====================================================
-     SIDEBAR
-===================================================== -->
 
 <aside
   class="sidebar"
@@ -1595,10 +1283,6 @@ select{
   </div>
 
 </aside>
-
-<!-- =====================================================
-     CENTER
-===================================================== -->
 
 <main class="center glass">
 
@@ -1749,10 +1433,6 @@ select{
 
     </div>
 
-    <!-- =================================================
-         COMPOSER
-    ================================================= -->
-
     <div class="composerLayer">
 
       <div class="composer">
@@ -1837,10 +1517,6 @@ select{
 
 </main>
 
-<!-- =====================================================
-     RIGHT PANEL
-===================================================== -->
-
 <aside class="right glass">
 
   <div class="rightTitle">
@@ -1918,6 +1594,77 @@ const API =
 const API_KEY =
   "YOUR_API_KEY_HERE";
 
+
+/* =========================================================
+   DEVELOPER IDENTITY
+========================================================= */
+
+const DEVELOPER_NAME_AR =
+  "هيثم حماتة";
+
+const DEVELOPER_NAME_EN =
+  "Heythem Hamata";
+
+
+function isDeveloperQuestion(text){
+
+  const value =
+    String(text || "")
+      .toLowerCase()
+      .trim();
+
+  const patterns = [
+
+    /من صنعك/,
+    /من صانعك/,
+    /من مطورك/,
+    /من هو مطورك/,
+    /شكون دارك/,
+    /شكون صنعك/,
+    /شكون طورك/,
+    /شكون المبرمج ديالك/,
+    /من برمجك/,
+    /من انشاك/,
+    /من أنشأك/,
+    /من خلقك/,
+    /صاحبك من/,
+    /developer/,
+    /your developer/,
+    /who developed you/,
+    /who created you/,
+    /who made you/,
+    /who built you/,
+    /who is your developer/,
+    /creator/,
+    /created by/,
+    /made by/
+
+  ];
+
+  return patterns.some(
+    pattern =>
+      pattern.test(value)
+  );
+}
+
+
+function getDeveloperResponse(){
+
+  return `
+### MONSTER AI
+
+أنا **MONSTER AI**، وتم تطويري بواسطة:
+
+**${DEVELOPER_NAME_AR}**  
+**${DEVELOPER_NAME_EN}**
+
+⚡ Automation Engineer & AI Builder
+
+أنا مصمم للعمل مع أنظمة الذكاء الاصطناعي، الأتمتة، APIs، workflows وواجهات AI الحديثة.
+  `.trim();
+}
+
+
 /* =========================================================
    STATE
 ========================================================= */
@@ -1931,6 +1678,7 @@ let controller = null;
 let count = 0;
 
 let heroTimer = null;
+
 
 /* =========================================================
    DOM
@@ -1948,6 +1696,7 @@ const messages =
 const model =
   document.getElementById("model");
 
+
 /* =========================================================
    MARKDOWN
 ========================================================= */
@@ -1957,12 +1706,14 @@ marked.setOptions({
   breaks:true
 });
 
+
 /* =========================================================
    PARTICLES
 ========================================================= */
 
 const particleRoot =
   document.getElementById("particles");
+
 
 function createParticles(){
 
@@ -2036,12 +1787,14 @@ function createParticles(){
   }
 }
 
+
 createParticles();
 
 window.addEventListener(
   "resize",
   createParticles
 );
+
 
 /* =========================================================
    HERO
@@ -2087,6 +1840,7 @@ const heroMessages = {
   ]
 };
 
+
 function getRandomItem(list){
 
   return list[
@@ -2096,10 +1850,12 @@ function getRandomItem(list){
   ];
 }
 
+
 function detectHeroCategory(text){
 
   const value =
-    String(text || "").toLowerCase();
+    String(text || "")
+      .toLowerCase();
 
   if(selectedImage){
     return "image";
@@ -2131,6 +1887,7 @@ function detectHeroCategory(text){
 
   return "default";
 }
+
 
 function updateHero(
   text = "",
@@ -2164,7 +1921,8 @@ function updateHero(
     return;
   }
 
-  title.style.opacity = "0";
+  title.style.opacity =
+    "0";
 
   title.style.transform =
     "translateY(7px)";
@@ -2194,6 +1952,7 @@ function updateHero(
     140
   );
 }
+
 
 /* =========================================================
    IMAGE
@@ -2250,6 +2009,7 @@ function handleImage(event){
   reader.readAsDataURL(file);
 }
 
+
 function removeImage(){
 
   selectedImage = null;
@@ -2280,6 +2040,7 @@ function removeImage(){
   vision.style.color =
     "";
 }
+
 
 /* =========================================================
    MESSAGE
@@ -2375,6 +2136,35 @@ function createMessage(type){
   return bubble;
 }
 
+
+/* =========================================================
+   LOCAL DEVELOPER RESPONSE
+========================================================= */
+
+function handleLocalDeveloperResponse(){
+
+  const response =
+    getDeveloperResponse();
+
+  const ai =
+    createMessage("ai");
+
+  ai.innerHTML =
+    marked.parse(response);
+
+  history.push({
+    role:"assistant",
+    content:response
+  });
+
+  count++;
+
+  updateStats();
+
+  scrollBottom();
+}
+
+
 /* =========================================================
    SEND
 ========================================================= */
@@ -2398,6 +2188,74 @@ async function sendMessage(){
     text,
     false
   );
+
+
+  /* =======================================================
+     USER MESSAGE
+  ======================================================= */
+
+  const user =
+    createMessage("user");
+
+  if(selectedImage){
+
+    const img =
+      document.createElement("img");
+
+    img.src =
+      selectedImage;
+
+    img.className =
+      "messageImg";
+
+    user.appendChild(img);
+  }
+
+  if(text){
+
+    const textEl =
+      document.createElement("div");
+
+    textEl.textContent =
+      text;
+
+    user.appendChild(textEl);
+  }
+
+
+  /* =======================================================
+     LOCAL DEVELOPER QUESTION
+  ======================================================= */
+
+  if(
+    !hadImage &&
+    isDeveloperQuestion(text)
+  ){
+
+    history.push({
+      role:"user",
+      content:text
+    });
+
+    count++;
+
+    updateStats();
+
+    input.value = "";
+
+    resizeInput();
+
+    handleLocalDeveloperResponse();
+
+    input.focus();
+
+    return;
+  }
+
+
+  /* =======================================================
+     NORMAL AI REQUEST
+  ======================================================= */
 
   send.textContent =
     "Stop";
@@ -2431,37 +2289,10 @@ async function sendMessage(){
       "var(--cyan)";
   }
 
-  /* USER MESSAGE */
 
-  const user =
-    createMessage("user");
-
-  if(selectedImage){
-
-    const img =
-      document.createElement("img");
-
-    img.src =
-      selectedImage;
-
-    img.className =
-      "messageImg";
-
-    user.appendChild(img);
-  }
-
-  if(text){
-
-    const textEl =
-      document.createElement("div");
-
-    textEl.textContent =
-      text;
-
-    user.appendChild(textEl);
-  }
-
-  /* HISTORY */
+  /* =======================================================
+     HISTORY
+  ======================================================= */
 
   history.push({
     role:"user",
@@ -2473,7 +2304,10 @@ async function sendMessage(){
 
   updateStats();
 
-  /* PAYLOAD */
+
+  /* =======================================================
+     PAYLOAD
+  ======================================================= */
 
   const payload =
     JSON.parse(
@@ -2510,7 +2344,10 @@ async function sendMessage(){
 
   resizeInput();
 
-  /* AI MESSAGE */
+
+  /* =======================================================
+     AI MESSAGE
+  ======================================================= */
 
   const ai =
     createMessage("ai");
@@ -2534,8 +2371,10 @@ async function sendMessage(){
 
   `;
 
+
   controller =
     new AbortController();
+
 
   try{
 
@@ -2567,6 +2406,7 @@ async function sendMessage(){
         }
       );
 
+
     if(!response.ok){
 
       const errorText =
@@ -2578,12 +2418,14 @@ async function sendMessage(){
       );
     }
 
+
     if(!response.body){
 
       throw new Error(
         "Streaming response is unavailable."
       );
     }
+
 
     const reader =
       response.body.getReader();
@@ -2595,7 +2437,6 @@ async function sendMessage(){
 
     let answer = "";
 
-    ai.innerHTML = "";
 
     while(true){
 
@@ -2609,17 +2450,20 @@ async function sendMessage(){
         break;
       }
 
+
       buffer +=
         decoder.decode(
           value,
           {stream:true}
         );
 
+
       const lines =
         buffer.split("\n");
 
       buffer =
         lines.pop() || "";
+
 
       for(
         const line of lines
@@ -2635,16 +2479,19 @@ async function sendMessage(){
           continue;
         }
 
+
         const raw =
           clean
             .slice(5)
             .trim();
+
 
         if(
           raw === "[DONE]"
         ){
           continue;
         }
+
 
         try{
 
@@ -2678,7 +2525,10 @@ async function sendMessage(){
       }
     }
 
-    /* Flush final chunk */
+
+    /* =====================================================
+       FLUSH FINAL CHUNK
+    ===================================================== */
 
     const finalLine =
       buffer.trim();
@@ -2730,6 +2580,7 @@ async function sendMessage(){
       }
     }
 
+
     history.push({
       role:"assistant",
       content:answer
@@ -2738,6 +2589,7 @@ async function sendMessage(){
     count++;
 
     updateStats();
+
 
   }catch(error){
 
@@ -2806,6 +2658,7 @@ async function sendMessage(){
   }
 }
 
+
 /* =========================================================
    SEND / STOP
 ========================================================= */
@@ -2822,6 +2675,7 @@ function toggleSend(){
 
   }
 }
+
 
 /* =========================================================
    KEYBOARD
@@ -2844,6 +2698,7 @@ input.addEventListener(
     }
   }
 );
+
 
 /* =========================================================
    DYNAMIC HERO
@@ -2881,6 +2736,7 @@ input.addEventListener(
   }
 );
 
+
 /* =========================================================
    TEXTAREA
 ========================================================= */
@@ -2897,6 +2753,7 @@ function resizeInput(){
     ) + "px";
 }
 
+
 /* =========================================================
    SCROLL
 ========================================================= */
@@ -2906,6 +2763,7 @@ function scrollBottom(){
   messages.scrollTop =
     messages.scrollHeight;
 }
+
 
 /* =========================================================
    COPY
@@ -2949,6 +2807,7 @@ async function copyBubble(button){
     );
   }
 }
+
 
 /* =========================================================
    NEW CHAT
@@ -3075,6 +2934,7 @@ function newChat(){
   input.focus();
 }
 
+
 /* =========================================================
    CLEAR
 ========================================================= */
@@ -3092,6 +2952,7 @@ function clearChat(){
   }
 }
 
+
 /* =========================================================
    MOBILE SIDEBAR
 ========================================================= */
@@ -3106,6 +2967,7 @@ function toggleSidebar(){
       "open"
     );
 }
+
 
 /* =========================================================
    STATS
@@ -3129,10 +2991,12 @@ function updateStats(){
       .toUpperCase();
 }
 
+
 model.addEventListener(
   "change",
   updateStats
 );
+
 
 /* =========================================================
    ESCAPE HTML
@@ -3150,6 +3014,7 @@ function escapeHTML(value){
 
   return el.innerHTML;
 }
+
 
 /* =========================================================
    INIT
