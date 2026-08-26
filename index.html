@@ -585,6 +585,13 @@ select{
   box-shadow:var(--glow-cyan);
 }
 
+.aiAvatar img{
+  width:85%;
+  height:85%;
+  object-fit:contain;
+  filter:drop-shadow(0 0 6px var(--cyan));
+}
+
 .youAvatar{
   background:linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03));
   color:#fff;
@@ -1149,7 +1156,7 @@ select{
       <div class="message">
 
         <div class="avatar aiAvatar">
-          AI
+          <img src="monster_logo.png.png" alt="MONSTER AI Logo">
         </div>
 
         <div class="content">
@@ -1807,10 +1814,11 @@ function createMessage(type){
         : "aiAvatar"
     );
 
-  avatar.textContent =
-    type === "user"
-      ? "YOU"
-      : "AI";
+  if(type === "user"){
+    avatar.textContent = "YOU";
+  } else {
+    avatar.innerHTML = `<img src="monster_logo.png.png" alt="MONSTER AI Logo">`;
+  }
 
   const content =
     document.createElement("div");
@@ -2585,7 +2593,7 @@ function newChat(){
     <div class="message ai">
 
       <div class="avatar aiAvatar">
-        AI
+        <img src="monster_logo.png.png" alt="MONSTER AI Logo">
       </div>
 
       <div class="content">
@@ -2716,16 +2724,3 @@ function escapeHTML(value){
 
   return el.innerHTML;
 }
-
-/* =========================================================
-   INIT
-========================================================= */
-
-updateStats();
-
-resizeInput();
-
-</script>
-
-</body>
-</html>
