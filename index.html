@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,6 +31,7 @@ body{
   overflow:hidden;
   background:#000;
   color:#fff;
+
   font-family:
     Inter,
     -apple-system,
@@ -44,10 +46,15 @@ body{
   position:relative;
 }
 
+/* =========================================================
+   3D SPACE
+========================================================= */
+
 .space{
   position:fixed;
   inset:0;
   overflow:hidden;
+
   background:
     radial-gradient(
       circle at 50% 50%,
@@ -57,15 +64,23 @@ body{
     #000;
 }
 
+/* =========================================================
+   3D FLOOR
+========================================================= */
+
 .grid{
   position:absolute;
+
   width:180%;
   height:180%;
+
   left:-40%;
   top:25%;
+
   transform:
     perspective(800px)
     rotateX(67deg);
+
   background-image:
     linear-gradient(
       rgba(0,234,255,.08) 1px,
@@ -76,20 +91,28 @@ body{
       rgba(0,234,255,.08) 1px,
       transparent 1px
     );
+
   background-size:55px 55px;
+
   mask-image:
     radial-gradient(
       ellipse at center,
       black 10%,
       transparent 72%
     );
+
   -webkit-mask-image:
     radial-gradient(
       ellipse at center,
       black 10%,
       transparent 72%
     );
-  animation:gridMove 18s linear infinite;
+
+  animation:
+    gridMove 18s linear infinite;
+
+  will-change:
+    transform;
 }
 
 @keyframes gridMove{
@@ -99,6 +122,7 @@ body{
       rotateX(67deg)
       translateY(0);
   }
+
   to{
     transform:
       perspective(800px)
@@ -106,6 +130,10 @@ body{
       translateY(55px);
   }
 }
+
+/* =========================================================
+   PARTICLES
+========================================================= */
 
 .particles{
   position:absolute;
@@ -115,9 +143,12 @@ body{
 
 .particle{
   position:absolute;
+
   width:var(--s);
   height:var(--s);
+
   border-radius:50%;
+
   background:
     radial-gradient(
       circle at 30% 30%,
@@ -126,19 +157,27 @@ body{
       #00cfff 48%,
       transparent 72%
     );
+
   box-shadow:
     0 0 calc(var(--s)*3)
       rgba(0,230,255,.8),
+
     0 0 calc(var(--s)*8)
       rgba(0,120,255,.35);
+
   animation:
     float var(--d)
     ease-in-out
     infinite
     alternate,
+
     blink 3s
     ease-in-out
     infinite;
+
+  will-change:
+    transform,
+    opacity;
 }
 
 @keyframes float{
@@ -147,6 +186,7 @@ body{
       translate3d(0,0,0)
       scale(.8);
   }
+
   to{
     transform:
       translate3d(
@@ -162,23 +202,33 @@ body{
   0%,100%{
     opacity:.2;
   }
+
   50%{
     opacity:1;
   }
 }
+
+/* =========================================================
+   BIG ORBS
+========================================================= */
 
 .orb{
   position:absolute;
   border-radius:50%;
   filter:blur(1px);
   pointer-events:none;
+
+  will-change:
+    transform;
 }
 
 .orb.one{
   width:260px;
   height:260px;
+
   left:-70px;
   top:12%;
+
   background:
     radial-gradient(
       circle at 35% 30%,
@@ -186,9 +236,11 @@ body{
       rgba(0,125,255,.16) 42%,
       transparent 70%
     );
+
   box-shadow:
     0 0 100px
       rgba(0,210,255,.13);
+
   animation:
     orbOne 12s
     ease-in-out
@@ -199,8 +251,10 @@ body{
 .orb.two{
   width:340px;
   height:340px;
+
   right:-120px;
   top:48%;
+
   background:
     radial-gradient(
       circle at 35% 35%,
@@ -208,6 +262,7 @@ body{
       rgba(80,50,255,.13) 45%,
       transparent 71%
     );
+
   animation:
     orbTwo 15s
     ease-in-out
@@ -218,14 +273,17 @@ body{
 .orb.three{
   width:150px;
   height:150px;
+
   right:27%;
   top:-60px;
+
   background:
     radial-gradient(
       circle,
       rgba(0,255,180,.45),
       transparent 68%
     );
+
   animation:
     orbThree 9s
     ease-in-out
@@ -254,17 +312,26 @@ body{
   }
 }
 
+/* =========================================================
+   APP UI
+========================================================= */
+
 .ui{
   position:relative;
   z-index:5;
+
   width:100%;
   height:100%;
+
   padding:18px;
+
   display:grid;
+
   grid-template-columns:
     230px
     minmax(0,1fr)
     220px;
+
   gap:16px;
 }
 
@@ -275,28 +342,40 @@ body{
       rgba(20,25,36,.70),
       rgba(3,5,9,.64)
     );
+
   border:1px solid var(--border);
+
   backdrop-filter:
     blur(28px)
     saturate(145%);
+
   -webkit-backdrop-filter:
     blur(28px)
     saturate(145%);
+
   box-shadow:
     inset 0 1px
       rgba(255,255,255,.055),
+
     0 30px 90px
       rgba(0,0,0,.55);
 }
 
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
 .sidebar{
   border-radius:24px;
   padding:16px;
+
   display:flex;
   flex-direction:column;
+
   transform:
     perspective(1000px)
     rotateY(3deg);
+
   transition:
     background .3s ease,
     border-color .3s ease,
@@ -304,17 +383,22 @@ body{
     backdrop-filter .3s ease,
     -webkit-backdrop-filter .3s ease,
     transform .3s ease;
+
   background:
     rgba(5,8,14,.07);
+
   border:
     1px solid
     rgba(255,255,255,.025);
+
   backdrop-filter:
     blur(5px)
     saturate(110%);
+
   -webkit-backdrop-filter:
     blur(5px)
     saturate(110%);
+
   box-shadow:none;
 }
 
@@ -322,32 +406,45 @@ body{
   transform:
     perspective(1000px)
     rotateY(0deg);
+
   background:
     linear-gradient(
       145deg,
       rgba(20,25,36,.72),
       rgba(3,5,9,.66)
     );
+
   border-color:
     rgba(255,255,255,.11);
+
   backdrop-filter:
     blur(28px)
     saturate(145%);
+
   -webkit-backdrop-filter:
     blur(28px)
     saturate(145%);
+
   box-shadow:
     inset 0 1px
       rgba(255,255,255,.055),
+
     0 30px 90px
       rgba(0,0,0,.55);
 }
 
+/* =========================================================
+   LOGO
+========================================================= */
+
 .logoRow{
   display:flex;
   align-items:center;
+
   gap:11px;
+
   margin-bottom:20px;
+
   position:relative;
   z-index:2;
 }
@@ -355,14 +452,22 @@ body{
 .logo{
   width:48px;
   height:48px;
+
   display:grid;
   place-items:center;
+
   border-radius:14px;
+
   background:transparent;
+
   border:0;
+
   overflow:visible;
+
   position:relative;
+
   flex-shrink:0;
+
   box-shadow:
     0 0 22px
       rgba(0,220,255,.20);
@@ -371,15 +476,21 @@ body{
 .logo img{
   width:100%;
   height:100%;
+
   object-fit:contain;
+
   display:block;
+
   background:transparent;
+
   border:0;
+
   filter:
     drop-shadow(
       0 0 8px
       rgba(0,234,255,.25)
     )
+
     drop-shadow(
       0 0 18px
       rgba(0,120,255,.12)
@@ -397,7 +508,9 @@ body{
 .logoTitle{
   font-size:14px;
   font-weight:800;
+
   color:#fff;
+
   text-shadow:
     0 0 12px
       rgba(255,255,255,.08);
@@ -405,62 +518,93 @@ body{
 
 .logoSub{
   font-size:8px;
+
   color:#627086;
+
   letter-spacing:.15em;
+
   margin-top:4px;
 }
 
+/* =========================================================
+   NEW BUTTON
+========================================================= */
+
 .new{
   height:44px;
+
   border:
     1px solid
     rgba(0,234,255,.25);
+
   border-radius:13px;
+
   background:
     linear-gradient(
       135deg,
       rgba(0,234,255,.11),
       rgba(80,100,255,.10)
     );
+
   color:#fff;
+
   font-weight:700;
   font-size:10px;
+
   cursor:pointer;
+
   transition:.2s;
 }
 
 .new:hover{
   border-color:
     rgba(0,234,255,.55);
+
   box-shadow:
     0 0 25px
       rgba(0,220,255,.10);
 }
 
+/* =========================================================
+   SIDEBAR ITEMS
+========================================================= */
+
 .label{
   margin:
     22px 8px 8px;
+
   font-size:8px;
+
   color:#515d72;
+
   text-transform:uppercase;
+
   letter-spacing:.15em;
 }
 
 .chat{
   padding:11px;
+
   border-radius:10px;
+
   color:#7b879c;
+
   font-size:10px;
+
   margin-bottom:3px;
+
   cursor:pointer;
+
   transition:.2s;
 }
 
 .chat.active{
   color:#fff;
+
   border:
     1px solid
     rgba(0,234,255,.13);
+
   background:
     linear-gradient(
       135deg,
@@ -472,12 +616,15 @@ body{
 .chat:hover{
   background:
     rgba(255,255,255,.04);
+
   color:white;
 }
 
 .sidebarBottom{
   margin-top:auto;
+
   padding-top:12px;
+
   border-top:
     1px solid
     var(--border);
@@ -485,9 +632,13 @@ body{
 
 .sideStat{
   display:flex;
+
   justify-content:space-between;
+
   font-size:8px;
+
   padding:6px 2px;
+
   color:#59657a;
 }
 
@@ -495,34 +646,55 @@ body{
   color:#d2d9e5;
 }
 
+/* =========================================================
+   CENTER
+========================================================= */
+
 .center{
   min-width:0;
+
   border-radius:26px;
+
   display:flex;
   flex-direction:column;
+
   overflow:hidden;
+
   transform:
     perspective(1400px)
     translateZ(0);
 }
 
+/* =========================================================
+   HEADER
+========================================================= */
+
 .header{
   height:66px;
+
   flex-shrink:0;
+
   display:flex;
+
   justify-content:space-between;
+
   align-items:center;
+
   padding:0 18px;
+
   border-bottom:
     1px solid
     var(--border);
+
   background:
     rgba(0,0,0,.26);
 }
 
 .headLeft{
   display:flex;
+
   align-items:center;
+
   gap:11px;
 }
 
@@ -537,14 +709,22 @@ body{
 
 .online{
   display:flex;
+
   align-items:center;
+
   gap:7px;
+
   color:#74e6b5;
+
   font-size:8px;
+
   padding:7px 9px;
+
   border-radius:999px;
+
   background:
     rgba(0,255,170,.035);
+
   border:
     1px solid
     rgba(0,255,170,.13);
@@ -553,9 +733,12 @@ body{
 .onlineDot{
   width:6px;
   height:6px;
+
   border-radius:50%;
+
   background:
     var(--green);
+
   box-shadow:
     0 0 10px
     var(--green);
@@ -569,13 +752,18 @@ body{
 select,
 .icon{
   height:33px;
+
   border:
     1px solid
     var(--border);
+
   border-radius:9px;
+
   background:
     rgba(255,255,255,.025);
+
   color:#cbd3df;
+
   cursor:pointer;
 }
 
@@ -589,20 +777,35 @@ select{
   width:33px;
 }
 
+/* =========================================================
+   CHAT
+========================================================= */
+
 .chatArea{
   flex:1;
+
   min-height:0;
+
   position:relative;
 }
 
 .messages{
   position:absolute;
+
   inset:0;
+
   overflow:auto;
+
   padding:
     30px
     5vw
     180px;
+
+  overscroll-behavior:
+    contain;
+
+  -webkit-overflow-scrolling:
+    touch;
 }
 
 .messages::-webkit-scrollbar{
@@ -612,11 +815,17 @@ select{
 .messages::-webkit-scrollbar-thumb{
   background:
     rgba(255,255,255,.08);
+
   border-radius:20px;
 }
 
+/* =========================================================
+   HERO
+========================================================= */
+
 .hero{
   max-width:820px;
+
   margin:
     25px auto
     38px;
@@ -624,23 +833,34 @@ select{
 
 .badge{
   display:inline-flex;
+
   align-items:center;
+
   gap:6px;
+
   font-size:8px;
+
   color:#6ceeff;
+
   letter-spacing:.13em;
+
   padding:7px 10px;
+
   border-radius:999px;
+
   border:
     1px solid
     rgba(0,234,255,.18);
+
   background:
     rgba(0,234,255,.035);
 }
 
 .hero h1{
   max-width:820px;
+
   margin:20px 0 0;
+
   font-family:
     Inter,
     -apple-system,
@@ -649,24 +869,36 @@ select{
     Roboto,
     Arial,
     sans-serif;
+
   font-size:
     clamp(
       34px,
       4vw,
       56px
     );
+
   font-weight:700;
+
   line-height:1.08;
+
   letter-spacing:-.035em;
+
   color:#fff;
+
   background:none;
+
   -webkit-background-clip:initial;
+
   background-clip:initial;
+
   -webkit-text-fill-color:#fff;
+
   text-shadow:
     0 1px 12px
     rgba(255,255,255,.045);
+
   text-wrap:balance;
+
   transition:
     opacity .25s ease,
     transform .25s ease;
@@ -674,36 +906,55 @@ select{
 
 .hero p{
   max-width:610px;
+
   color:#657187;
+
   font-size:12px;
+
   line-height:1.8;
+
   margin-top:18px;
 }
 
 .tags{
   display:flex;
+
   flex-wrap:wrap;
+
   gap:6px;
+
   margin-top:18px;
 }
 
 .tag{
   font-size:8px;
+
   padding:7px 9px;
+
   border-radius:999px;
+
   border:
     1px solid
     var(--border);
+
   background:
     rgba(255,255,255,.018);
+
   color:#667286;
 }
 
+/* =========================================================
+   MESSAGES
+========================================================= */
+
 .message{
   max-width:820px;
+
   margin:
     0 auto 24px;
+
   display:flex;
+
   gap:10px;
 }
 
@@ -714,12 +965,19 @@ select{
 .avatar{
   width:31px;
   height:31px;
+
   min-width:31px;
+
   border-radius:10px;
+
   display:grid;
+
   place-items:center;
+
   font-size:8px;
+
   font-weight:800;
+
   border:
     1px solid
     var(--border);
@@ -727,6 +985,7 @@ select{
 
 .aiAvatar{
   color:#71f0ff;
+
   background:
     rgba(0,234,255,.07);
 }
@@ -734,6 +993,7 @@ select{
 .youAvatar{
   background:
     rgba(255,255,255,.05);
+
   color:#e0e5ee;
 }
 
@@ -744,7 +1004,9 @@ select{
 
 .messageHead{
   font-size:8px;
+
   color:#536076;
+
   margin:
     2px 0
     6px;
@@ -752,23 +1014,31 @@ select{
 
 .bubble{
   color:#d7dee9;
+
   line-height:1.75;
+
   font-size:12px;
+
+  overflow-wrap:
+    anywhere;
 }
 
 .user .bubble{
   padding:12px 14px;
+
   border-radius:
     16px
     7px
     16px
     16px;
+
   background:
     linear-gradient(
       135deg,
       rgba(64,112,255,.14),
       rgba(0,234,255,.035)
     );
+
   border:
     1px solid
     rgba(70,120,255,.15);
@@ -776,25 +1046,35 @@ select{
 
 .bubble pre{
   padding:14px;
+
   overflow:auto;
+
   border-radius:13px;
+
   background:#010202;
+
   border:
     1px solid
     rgba(255,255,255,.07);
+
+  -webkit-overflow-scrolling:
+    touch;
 }
 
 .bubble code{
   font-family:
     Consolas,
     monospace;
+
   font-size:10px;
 }
 
 .bubble :not(pre)>code{
   background:
     rgba(0,0,0,.4);
+
   padding:2px 5px;
+
   border-radius:5px;
 }
 
@@ -809,11 +1089,17 @@ select{
 
 .copy{
   opacity:0;
+
   margin-top:5px;
+
   background:none;
+
   border:0;
+
   color:#4d596c;
+
   font-size:8px;
+
   cursor:pointer;
 }
 
@@ -823,8 +1109,11 @@ select{
 
 .messageImg{
   max-width:290px;
+
   display:block;
+
   border-radius:13px;
+
   margin-bottom:8px;
 }
 
@@ -848,7 +1137,6 @@ select{
     -webkit-backdrop-filter .3s ease,
     transform .3s ease;
 
-  /* Transparent by default */
   background:
     rgba(5,8,14,.07);
 
@@ -868,12 +1156,10 @@ select{
 }
 
 .right:hover{
-
   transform:
     perspective(1000px)
     rotateY(0deg);
 
-  /* Glass appears on hover */
   background:
     linear-gradient(
       145deg,
@@ -902,54 +1188,77 @@ select{
 
 .rightTitle{
   font-size:9px;
+
   font-weight:800;
+
   margin:
     2px 4px
     10px;
+
   letter-spacing:.08em;
 }
 
 .metric{
   padding:11px;
+
   margin-bottom:7px;
+
   border-radius:13px;
+
   border:
     1px solid
     rgba(255,255,255,.065);
+
   background:
     rgba(255,255,255,.018);
 }
 
 .metricName{
   font-size:7px;
+
   color:#526076;
+
   text-transform:uppercase;
+
   letter-spacing:.1em;
 }
 
 .metricValue{
   margin-top:5px;
+
   font-size:16px;
+
   font-weight:800;
 }
 
 .metricSub{
   color:#526076;
+
   font-size:7px;
+
   margin-top:2px;
 }
 
+/* =========================================================
+   COMPOSER
+========================================================= */
+
 .composerLayer{
   position:absolute;
+
   z-index:20;
+
   left:0;
   right:0;
   bottom:0;
+
   padding:
     12px
     5vw
     17px;
+
   pointer-events:none;
+
   background:
     linear-gradient(
       to bottom,
@@ -961,32 +1270,43 @@ select{
 
 .composer{
   max-width:820px;
+
   margin:auto;
+
   padding:9px;
+
   border-radius:20px;
+
   pointer-events:auto;
+
   background:
     linear-gradient(
       145deg,
       rgba(18,23,31,.91),
       rgba(3,5,8,.94)
     );
+
   border:
     1px solid
     rgba(255,255,255,.13);
+
   backdrop-filter:
     blur(25px);
+
   -webkit-backdrop-filter:
     blur(25px);
+
   box-shadow:
     0 30px 90px
       rgba(0,0,0,.6),
+
     inset 0 1px
       rgba(255,255,255,.04);
 }
 
 .preview{
   display:none;
+
   padding:3px;
 }
 
@@ -997,8 +1317,11 @@ select{
 .previewImg{
   width:58px;
   height:58px;
+
   object-fit:cover;
+
   border-radius:11px;
+
   border:
     1px solid
     var(--border);
@@ -1006,49 +1329,72 @@ select{
 
 .remove{
   position:absolute;
+
   right:-5px;
   top:-5px;
+
   width:18px;
   height:18px;
+
   border:0;
+
   border-radius:50%;
+
   background:#242934;
+
   color:#fff;
+
   cursor:pointer;
 }
 
 .composerMain{
   display:flex;
+
   align-items:flex-end;
+
   gap:8px;
 }
 
 .attach{
   width:41px;
   height:41px;
+
   border:
     1px solid
     var(--border);
+
   border-radius:11px;
+
   background:
     rgba(255,255,255,.025);
+
   color:#7d8aa0;
+
   font-size:17px;
+
   cursor:pointer;
 }
 
 #input{
   flex:1;
+
   min-height:41px;
   max-height:150px;
+
   resize:none;
+
   border:0;
   outline:0;
+
   color:#fff;
+
   background:transparent;
+
   padding:
     10px 4px;
+
   font-size:12px;
+
   line-height:1.5;
 }
 
@@ -1058,13 +1404,21 @@ select{
 
 .send{
   min-width:78px;
+
   height:41px;
+
   border:0;
+
   border-radius:11px;
+
   color:#fff;
+
   font-size:9px;
+
   font-weight:800;
+
   cursor:pointer;
+
   background:
     linear-gradient(
       135deg,
@@ -1072,6 +1426,7 @@ select{
       #4879ff 55%,
       #a04fff
     );
+
   box-shadow:
     0 12px 30px
       rgba(50,100,255,.25);
@@ -1088,12 +1443,20 @@ select{
 
 .composerMeta{
   display:flex;
+
   justify-content:space-between;
+
   padding:
     7px 3px 0;
+
   color:#465164;
+
   font-size:7px;
 }
+
+/* =========================================================
+   TABLET
+========================================================= */
 
 @media(max-width:1100px){
 
@@ -1108,6 +1471,10 @@ select{
   }
 }
 
+/* =========================================================
+   MOBILE PERFORMANCE MODE
+========================================================= */
+
 @media(max-width:750px){
 
   .ui{
@@ -1115,24 +1482,62 @@ select{
     padding:0;
   }
 
+  /* -------------------------------------------------------
+     SIDEBAR
+  ------------------------------------------------------- */
+
   .sidebar{
     position:fixed;
+
     z-index:100;
+
     left:-270px;
+
     top:10px;
     bottom:10px;
+
     width:240px;
-    transition:.25s;
+
+    transition:
+      left .25s ease;
+
+    transform:none;
+
+    backdrop-filter:
+      blur(10px)
+      saturate(110%);
+
+    -webkit-backdrop-filter:
+      blur(10px)
+      saturate(110%);
+  }
+
+  .sidebar:hover{
+    transform:none;
+
+    backdrop-filter:
+      blur(16px)
+      saturate(120%);
+
+    -webkit-backdrop-filter:
+      blur(16px)
+      saturate(120%);
   }
 
   .sidebar.open{
     left:10px;
   }
 
+  /* -------------------------------------------------------
+     CENTER
+  ------------------------------------------------------- */
+
   .center{
     width:100%;
     height:100%;
     border-radius:0;
+
+    transform:none;
   }
 
   .mobile{
@@ -1143,6 +1548,10 @@ select{
     display:none;
   }
 
+  /* -------------------------------------------------------
+     MESSAGES
+  ------------------------------------------------------- */
+
   .messages{
     padding-left:14px;
     padding-right:14px;
@@ -1152,9 +1561,148 @@ select{
     font-size:36px;
   }
 
+  /* -------------------------------------------------------
+     COMPOSER
+  ------------------------------------------------------- */
+
   .composerLayer{
     padding-left:9px;
     padding-right:9px;
+  }
+
+  /* -------------------------------------------------------
+     GRID
+  ------------------------------------------------------- */
+
+  .grid{
+    opacity:.55;
+
+    animation:
+      gridMove 32s
+      linear
+      infinite;
+  }
+
+  /* -------------------------------------------------------
+     PARTICLES
+     28 instead of 130-260
+  ------------------------------------------------------- */
+
+  .particle{
+
+    box-shadow:
+      0 0 6px
+        rgba(0,230,255,.35);
+
+    animation:
+      blink 4s
+      ease-in-out
+      infinite;
+  }
+
+  /* -------------------------------------------------------
+     ORBS
+     Static on mobile
+  ------------------------------------------------------- */
+
+  .orb{
+    filter:blur(4px);
+
+    animation:none !important;
+  }
+
+  /* -------------------------------------------------------
+     GLASS
+     Lower blur on mobile
+  ------------------------------------------------------- */
+
+  .glass{
+    backdrop-filter:
+      blur(12px)
+      saturate(120%);
+
+    -webkit-backdrop-filter:
+      blur(12px)
+      saturate(120%);
+  }
+
+  /* -------------------------------------------------------
+     RIGHT PANEL
+     Normally hidden by <=1100px,
+     kept optimized if viewport/layout changes.
+  ------------------------------------------------------- */
+
+  .right{
+    transform:none;
+
+    backdrop-filter:
+      blur(10px)
+      saturate(110%);
+
+    -webkit-backdrop-filter:
+      blur(10px)
+      saturate(110%);
+  }
+
+  .right:hover{
+    transform:none;
+
+    backdrop-filter:
+      blur(16px)
+      saturate(120%);
+
+    -webkit-backdrop-filter:
+      blur(16px)
+      saturate(120%);
+  }
+
+  /* -------------------------------------------------------
+     MESSAGE PERFORMANCE
+  ------------------------------------------------------- */
+
+  .message{
+    content-visibility:auto;
+    contain-intrinsic-size:0 120px;
+  }
+
+  /* -------------------------------------------------------
+     SHADOWS
+  ------------------------------------------------------- */
+
+  .sidebar,
+  .right,
+  .center{
+    box-shadow:
+      0 15px 40px
+      rgba(0,0,0,.35);
+  }
+
+  .sidebar:hover,
+  .right:hover{
+    box-shadow:
+      0 15px 40px
+      rgba(0,0,0,.40);
+  }
+}
+
+/* =========================================================
+   REDUCE MOTION
+========================================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+  *,
+  *::before,
+  *::after{
+
+    animation-duration:
+      .01ms !important;
+
+    animation-iteration-count:
+      1 !important;
+
+    transition-duration:
+      .01ms !important;
   }
 }
 </style>
@@ -1180,6 +1728,10 @@ select{
 </div>
 
 <div class="ui">
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
 
 <aside
   class="sidebar"
@@ -1250,7 +1802,7 @@ select{
         Gateway
       </span>
 
-      <strong>
+      <strong id="gatewayStatus">
         ONLINE
       </strong>
 
@@ -1283,6 +1835,10 @@ select{
   </div>
 
 </aside>
+
+<!-- =====================================================
+     CENTER
+===================================================== -->
 
 <main class="center glass">
 
@@ -1320,12 +1876,24 @@ select{
           Auto
         </option>
 
-        <option value="fast">
-          Fast
+        <option value="auto/best-chat">
+          Best Chat
         </option>
 
-        <option value="smart">
-          Smart
+        <option value="auto/best-fast">
+          Best Fast
+        </option>
+
+        <option value="auto/best-reasoning">
+          Best Reasoning
+        </option>
+
+        <option value="auto/best-coding">
+          Best Coding
+        </option>
+
+        <option value="auto/best-vision">
+          Best Vision
         </option>
 
       </select>
@@ -1409,6 +1977,7 @@ select{
           <div class="bubble">
 
             Hello 👋
+
             <br><br>
 
             Your father and your mother are unavailable.
@@ -1432,6 +2001,10 @@ select{
       </div>
 
     </div>
+
+    <!-- =================================================
+         COMPOSER
+    ================================================= -->
 
     <div class="composerLayer">
 
@@ -1473,7 +2046,11 @@ select{
 
           <button
             class="attach"
-            onclick="document.getElementById('file').click()"
+            onclick="
+              document
+                .getElementById('file')
+                .click()
+            "
             title="Vision">
 
             ＋
@@ -1517,7 +2094,11 @@ select{
 
 </main>
 
-<aside class="right glass">
+<!-- =====================================================
+     RIGHT PANEL
+===================================================== -->
+
+<aside class="right">
 
   <div class="rightTitle">
     SYSTEM TELEMETRY
@@ -1549,6 +2130,7 @@ select{
 
     <div
       class="metricValue"
+      id="gatewayText"
       style="color:var(--green)">
       ONLINE
     </div>
@@ -1591,8 +2173,12 @@ select{
 const API =
   "https://posts-nasa-decent-dee.trycloudflare.com/v1";
 
-const API_KEY =
-  "YOUR_API_KEY_HERE";
+/*
+  OmniRoute عندك يعرض /v1/models بدون API key،
+  لذلك نخليها فارغة.
+*/
+
+const API_KEY = "";
 
 
 /* =========================================================
@@ -1619,6 +2205,7 @@ function isDeveloperQuestion(text){
     /من صانعك/,
     /من مطورك/,
     /من هو مطورك/,
+    /من هو المطور ديالك/,
     /شكون دارك/,
     /شكون صنعك/,
     /شكون طورك/,
@@ -1627,7 +2214,12 @@ function isDeveloperQuestion(text){
     /من انشاك/,
     /من أنشأك/,
     /من خلقك/,
-    /صاحبك من/,
+    /من بناك/,
+    /شكون بناك/,
+    /شكون هو المطور ديالك/,
+    /شنو اسم مطورك/,
+    /اسم مطورك/,
+    /مطورك شكون/,
     /developer/,
     /your developer/,
     /who developed you/,
@@ -1635,6 +2227,7 @@ function isDeveloperQuestion(text){
     /who made you/,
     /who built you/,
     /who is your developer/,
+    /who is your creator/,
     /creator/,
     /created by/,
     /made by/
@@ -1708,27 +2301,35 @@ marked.setOptions({
 
 
 /* =========================================================
-   PARTICLES
+   PARTICLES — OPTIMIZED
 ========================================================= */
 
 const particleRoot =
   document.getElementById("particles");
+
+let particleResizeTimer =
+  null;
 
 
 function createParticles(){
 
   particleRoot.innerHTML = "";
 
+  /*
+    Desktop:
+    90 particles
+
+    Mobile:
+    28 particles
+  */
+
+  const isMobile =
+    window.innerWidth <= 750;
+
   const particleCount =
-    Math.min(
-      260,
-      Math.max(
-        130,
-        Math.floor(
-          window.innerWidth / 5
-        )
-      )
-    );
+    isMobile
+      ? 28
+      : 90;
 
   for(
     let i = 0;
@@ -1743,16 +2344,30 @@ function createParticles(){
       "particle";
 
     const size =
-      1 + Math.random() * 4;
+      isMobile
+        ? 1 + Math.random() * 2
+        : 1 + Math.random() * 3;
 
     const x =
-      (Math.random() - .5) * 320;
+      (Math.random() - .5) *
+      (
+        isMobile
+          ? 220
+          : 320
+      );
 
     const y =
-      (Math.random() - .5) * 260;
+      (Math.random() - .5) *
+      (
+        isMobile
+          ? 180
+          : 260
+      );
 
     const duration =
-      4 + Math.random() * 10;
+      isMobile
+        ? 7 + Math.random() * 8
+        : 4 + Math.random() * 10;
 
     p.style.setProperty(
       "--s",
@@ -1775,13 +2390,18 @@ function createParticles(){
     );
 
     p.style.left =
-      Math.random() * 100 + "%";
+      Math.random() *
+      100 +
+      "%";
 
     p.style.top =
-      Math.random() * 100 + "%";
+      Math.random() *
+      100 +
+      "%";
 
     p.style.animationDelay =
-      -Math.random() * 8 + "s";
+      -Math.random() * 8 +
+      "s";
 
     particleRoot.appendChild(p);
   }
@@ -1790,9 +2410,26 @@ function createParticles(){
 
 createParticles();
 
+
+/*
+  Prevent repeated full particle rebuilds
+  during mobile browser resize / keyboard.
+*/
+
 window.addEventListener(
   "resize",
-  createParticles
+  () => {
+
+    clearTimeout(
+      particleResizeTimer
+    );
+
+    particleResizeTimer =
+      setTimeout(
+        createParticles,
+        300
+      );
+  }
 );
 
 
@@ -1838,6 +2475,7 @@ const heroMessages = {
     "What should I analyze?",
     "Let's inspect the image."
   ]
+
 };
 
 
@@ -1845,7 +2483,8 @@ function getRandomItem(list){
 
   return list[
     Math.floor(
-      Math.random() * list.length
+      Math.random() *
+      list.length
     )
   ];
 }
@@ -1858,30 +2497,39 @@ function detectHeroCategory(text){
       .toLowerCase();
 
   if(selectedImage){
+
     return "image";
   }
 
   if(
-    /n8n|automation|webhook|workflow|zapier|make\.com/.test(value)
+    /n8n|automation|webhook|workflow|zapier|make\.com/
+      .test(value)
   ){
+
     return "automation";
   }
 
   if(
-    /code|javascript|python|html|css|api|json|bug|function|script|node/.test(value)
+    /code|javascript|python|html|css|api|json|bug|function|script|node/
+      .test(value)
   ){
+
     return "code";
   }
 
   if(
-    /gold|xau|forex|trade|trading|market|buy|sell|signal|tp|sl/.test(value)
+    /gold|xau|forex|trade|trading|market|buy|sell|signal|tp|sl/
+      .test(value)
   ){
+
     return "trading";
   }
 
   if(
-    /\?|how |why |what |when |where |can |could |should |help/.test(value)
+    /\?|how |why |what |when |where |can |could |should |help|من |ما |كيف |هل |شنو |شكون |واش /
+      .test(value)
   ){
+
     return "question";
   }
 
@@ -1913,11 +2561,14 @@ function updateHero(
     heroMessages.default;
 
   const next =
-    getRandomItem(choices);
+    getRandomItem(
+      choices
+    );
 
   if(
     title.textContent.trim() === next
   ){
+
     return;
   }
 
@@ -1964,12 +2615,34 @@ function handleImage(event){
     event.target.files?.[0];
 
   if(!file){
+
     return;
   }
 
   if(
     !file.type.startsWith("image/")
   ){
+
+    return;
+  }
+
+  /*
+    Prevent huge images from destroying
+    mobile memory.
+  */
+
+  if(
+    file.size >
+    12 * 1024 * 1024
+  ){
+
+    alert(
+      "Image is too large. Maximum size is 12MB."
+    );
+
+    event.target.value =
+      "";
+
     return;
   }
 
@@ -1983,12 +2656,16 @@ function handleImage(event){
         e.target.result;
 
       document
-        .getElementById("previewImg")
+        .getElementById(
+          "previewImg"
+        )
         .src =
         selectedImage;
 
       document
-        .getElementById("preview")
+        .getElementById(
+          "preview"
+        )
         .style.display =
         "block";
 
@@ -2003,29 +2680,51 @@ function handleImage(event){
       vision.style.color =
         "var(--cyan)";
 
-      updateHero("",false);
+      updateHero(
+        "",
+        false
+      );
     };
 
-  reader.readAsDataURL(file);
+  reader.onerror =
+    () => {
+
+      alert(
+        "Unable to read the image."
+      );
+
+      removeImage();
+    };
+
+  reader.readAsDataURL(
+    file
+  );
 }
 
 
 function removeImage(){
 
-  selectedImage = null;
+  selectedImage =
+    null;
 
   document
-    .getElementById("preview")
+    .getElementById(
+      "preview"
+    )
     .style.display =
     "none";
 
   document
-    .getElementById("previewImg")
+    .getElementById(
+      "previewImg"
+    )
     .src =
     "";
 
   document
-    .getElementById("file")
+    .getElementById(
+      "file"
+    )
     .value =
     "";
 
@@ -2049,7 +2748,9 @@ function removeImage(){
 function createMessage(type){
 
   const row =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   row.className =
     "message " +
@@ -2060,10 +2761,13 @@ function createMessage(type){
     );
 
   const avatar =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   avatar.className =
     "avatar " +
+
     (
       type === "user"
         ? "youAvatar"
@@ -2076,13 +2780,17 @@ function createMessage(type){
       : "AI";
 
   const content =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   content.className =
     "content";
 
   const head =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   head.className =
     "messageHead";
@@ -2093,13 +2801,17 @@ function createMessage(type){
       : "MONSTER AI · AI";
 
   const bubble =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   bubble.className =
     "bubble";
 
   const copy =
-    document.createElement("button");
+    document.createElement(
+      "button"
+    );
 
   copy.className =
     "copy";
@@ -2108,28 +2820,48 @@ function createMessage(type){
     "Copy";
 
   copy.onclick =
-    () => copyBubble(copy);
+    () => copyBubble(
+      copy
+    );
 
-  content.appendChild(head);
+  content.appendChild(
+    head
+  );
 
-  content.appendChild(bubble);
+  content.appendChild(
+    bubble
+  );
 
-  content.appendChild(copy);
+  content.appendChild(
+    copy
+  );
 
-  if(type === "user"){
+  if(
+    type === "user"
+  ){
 
-    row.appendChild(content);
+    row.appendChild(
+      content
+    );
 
-    row.appendChild(avatar);
+    row.appendChild(
+      avatar
+    );
 
   }else{
 
-    row.appendChild(avatar);
+    row.appendChild(
+      avatar
+    );
 
-    row.appendChild(content);
+    row.appendChild(
+      content
+    );
   }
 
-  messages.appendChild(row);
+  messages.appendChild(
+    row
+  );
 
   scrollBottom();
 
@@ -2147,10 +2879,14 @@ function handleLocalDeveloperResponse(){
     getDeveloperResponse();
 
   const ai =
-    createMessage("ai");
+    createMessage(
+      "ai"
+    );
 
   ai.innerHTML =
-    marked.parse(response);
+    marked.parse(
+      response
+    );
 
   history.push({
     role:"assistant",
@@ -2175,12 +2911,20 @@ async function sendMessage(){
     input.value.trim();
 
   const hadImage =
-    Boolean(selectedImage);
+    Boolean(
+      selectedImage
+    );
 
   if(
     !text &&
     !hadImage
   ){
+
+    return;
+  }
+
+  if(controller){
+
     return;
   }
 
@@ -2195,12 +2939,18 @@ async function sendMessage(){
   ======================================================= */
 
   const user =
-    createMessage("user");
+    createMessage(
+      "user"
+    );
 
-  if(selectedImage){
+  if(
+    selectedImage
+  ){
 
     const img =
-      document.createElement("img");
+      document.createElement(
+        "img"
+      );
 
     img.src =
       selectedImage;
@@ -2208,18 +2958,27 @@ async function sendMessage(){
     img.className =
       "messageImg";
 
-    user.appendChild(img);
+    img.alt =
+      "Uploaded image";
+
+    user.appendChild(
+      img
+    );
   }
 
   if(text){
 
     const textEl =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     textEl.textContent =
       text;
 
-    user.appendChild(textEl);
+    user.appendChild(
+      textEl
+    );
   }
 
 
@@ -2229,7 +2988,9 @@ async function sendMessage(){
 
   if(
     !hadImage &&
-    isDeveloperQuestion(text)
+    isDeveloperQuestion(
+      text
+    )
   ){
 
     history.push({
@@ -2241,7 +3002,8 @@ async function sendMessage(){
 
     updateStats();
 
-    input.value = "";
+    input.value =
+      "";
 
     resizeInput();
 
@@ -2275,7 +3037,10 @@ async function sendMessage(){
   streaming.style.color =
     "var(--purple)";
 
-  if(hadImage){
+
+  if(
+    hadImage
+  ){
 
     const vision =
       document.getElementById(
@@ -2297,7 +3062,8 @@ async function sendMessage(){
   history.push({
     role:"user",
     content:
-      text || "[Image]"
+      text ||
+      "[Image]"
   });
 
   count++;
@@ -2311,10 +3077,14 @@ async function sendMessage(){
 
   const payload =
     JSON.parse(
-      JSON.stringify(history)
+      JSON.stringify(
+        history
+      )
     );
 
-  if(hadImage){
+  if(
+    hadImage
+  ){
 
     payload[
       payload.length - 1
@@ -2322,6 +3092,7 @@ async function sendMessage(){
 
       {
         type:"text",
+
         text:
           text ||
           "Analyze this image."
@@ -2329,6 +3100,7 @@ async function sendMessage(){
 
       {
         type:"image_url",
+
         image_url:{
           url:
             selectedImage
@@ -2340,7 +3112,8 @@ async function sendMessage(){
 
   removeImage();
 
-  input.value = "";
+  input.value =
+    "";
 
   resizeInput();
 
@@ -2350,7 +3123,9 @@ async function sendMessage(){
   ======================================================= */
 
   const ai =
-    createMessage("ai");
+    createMessage(
+      "ai"
+    );
 
   ai.innerHTML = `
 
@@ -2378,27 +3153,64 @@ async function sendMessage(){
 
   try{
 
+    /*
+      Convert UI "Auto" to a real OmniRoute model.
+    */
+
+    const selectedModel =
+      model.value === "auto"
+        ? "auto/best-chat"
+        : model.value;
+
+
+    const headers = {
+      "Content-Type":
+        "application/json"
+    };
+
+
+    /*
+      API_KEY is empty by default.
+      Authorization is only added when
+      a key is actually configured.
+    */
+
+    if(
+      API_KEY
+    ){
+
+      headers.Authorization =
+        "Bearer " +
+        API_KEY;
+    }
+
+
     const response =
       await fetch(
+
         API +
         "/chat/completions",
+
         {
-          method:"POST",
 
-          headers:{
-            "Content-Type":
-              "application/json",
+          method:
+            "POST",
 
-            "Authorization":
-              "Bearer " +
-              API_KEY
-          },
+          headers:
+            headers,
 
           body:
             JSON.stringify({
-              model:model.value,
-              messages:payload,
-              stream:true
+
+              model:
+                selectedModel,
+
+              messages:
+                payload,
+
+              stream:
+                true
+
             }),
 
           signal:
@@ -2407,19 +3219,25 @@ async function sendMessage(){
       );
 
 
-    if(!response.ok){
+    if(
+      !response.ok
+    ){
 
       const errorText =
         await response.text();
 
       throw new Error(
+
         errorText ||
         `HTTP ${response.status}`
+
       );
     }
 
 
-    if(!response.body){
+    if(
+      !response.body
+    ){
 
       throw new Error(
         "Streaming response is unavailable."
@@ -2428,17 +3246,28 @@ async function sendMessage(){
 
 
     const reader =
-      response.body.getReader();
+      response
+        .body
+        .getReader();
 
     const decoder =
-      new TextDecoder("utf-8");
+      new TextDecoder(
+        "utf-8"
+      );
 
-    let buffer = "";
+    let buffer =
+      "";
 
-    let answer = "";
+    let answer =
+      "";
+
+    let streamFinished =
+      false;
 
 
-    while(true){
+    while(
+      !streamFinished
+    ){
 
       const {
         value,
@@ -2446,7 +3275,11 @@ async function sendMessage(){
       } =
         await reader.read();
 
-      if(done){
+
+      if(
+        done
+      ){
+
         break;
       }
 
@@ -2454,15 +3287,32 @@ async function sendMessage(){
       buffer +=
         decoder.decode(
           value,
-          {stream:true}
+          {
+            stream:true
+          }
+        );
+
+
+      /*
+        Normalize Windows line endings.
+      */
+
+      buffer =
+        buffer.replace(
+          /\r\n/g,
+          "\n"
         );
 
 
       const lines =
-        buffer.split("\n");
+        buffer.split(
+          "\n"
+        );
+
 
       buffer =
-        lines.pop() || "";
+        lines.pop() ||
+        "";
 
 
       for(
@@ -2472,10 +3322,14 @@ async function sendMessage(){
         const clean =
           line.trim();
 
+
         if(
           !clean ||
-          !clean.startsWith("data:")
+          !clean.startsWith(
+            "data:"
+          )
         ){
+
           continue;
         }
 
@@ -2487,16 +3341,24 @@ async function sendMessage(){
 
 
         if(
-          raw === "[DONE]"
+          raw ===
+          "[DONE]"
         ){
-          continue;
+
+          streamFinished =
+            true;
+
+          break;
         }
 
 
         try{
 
           const json =
-            JSON.parse(raw);
+            JSON.parse(
+              raw
+            );
+
 
           const delta =
             json
@@ -2504,10 +3366,17 @@ async function sendMessage(){
               ?.delta
               ?.content;
 
-          if(delta){
+
+          if(
+            delta
+          ){
 
             answer +=
               delta;
+
+            /*
+              Keep the existing Markdown behavior.
+            */
 
             ai.innerHTML =
               marked.parse(
@@ -2519,7 +3388,9 @@ async function sendMessage(){
 
         }catch(error){
 
-          /* Ignore incomplete SSE chunks */
+          /*
+            Ignore incomplete SSE chunks.
+          */
 
         }
       }
@@ -2533,15 +3404,19 @@ async function sendMessage(){
     const finalLine =
       buffer.trim();
 
+
     if(
       finalLine &&
-      finalLine.startsWith("data:")
+      finalLine.startsWith(
+        "data:"
+      )
     ){
 
       const raw =
         finalLine
           .slice(5)
           .trim();
+
 
       if(
         raw &&
@@ -2551,7 +3426,10 @@ async function sendMessage(){
         try{
 
           const json =
-            JSON.parse(raw);
+            JSON.parse(
+              raw
+            );
+
 
           const delta =
             json
@@ -2559,7 +3437,10 @@ async function sendMessage(){
               ?.delta
               ?.content;
 
-          if(delta){
+
+          if(
+            delta
+          ){
 
             answer +=
               delta;
@@ -2574,10 +3455,29 @@ async function sendMessage(){
 
         }catch(error){
 
-          /* Ignore malformed final chunk */
+          /*
+            Ignore malformed final chunk.
+          */
 
         }
       }
+    }
+
+
+    /*
+      If a response came back but content was empty,
+      show a useful message instead of a blank bubble.
+    */
+
+    if(
+      !answer.trim()
+    ){
+
+      answer =
+        "MONSTER AI returned an empty response.";
+
+      ai.innerHTML =
+        `<span style="color:#718096">${escapeHTML(answer)}</span>`;
     }
 
 
@@ -2646,7 +3546,8 @@ async function sendMessage(){
       "stop"
     );
 
-    controller = null;
+    controller =
+      null;
 
     streaming.textContent =
       "ON";
@@ -2692,7 +3593,10 @@ input.addEventListener(
 
       event.preventDefault();
 
-      if(!controller){
+      if(
+        !controller
+      ){
+
         sendMessage();
       }
     }
@@ -2721,7 +3625,9 @@ input.addEventListener(
       setTimeout(
         () => {
 
-          if(text){
+          if(
+            text
+          ){
 
             updateHero(
               text,
@@ -2750,7 +3656,8 @@ function resizeInput(){
     Math.min(
       input.scrollHeight,
       150
-    ) + "px";
+    ) +
+    "px";
 }
 
 
@@ -2760,8 +3667,14 @@ function resizeInput(){
 
 function scrollBottom(){
 
-  messages.scrollTop =
-    messages.scrollHeight;
+  requestAnimationFrame(
+    () => {
+
+      messages.scrollTop =
+        messages.scrollHeight;
+
+    }
+  );
 }
 
 
@@ -2769,25 +3682,40 @@ function scrollBottom(){
    COPY
 ========================================================= */
 
-async function copyBubble(button){
+async function copyBubble(
+  button
+){
 
   const bubble =
     button
-      .closest(".content")
-      ?.querySelector(".bubble");
+      .closest(
+        ".content"
+      )
+      ?.querySelector(
+        ".bubble"
+      );
 
-  if(!bubble){
+
+  if(
+    !bubble
+  ){
+
     return;
   }
 
+
   try{
 
-    await navigator.clipboard.writeText(
-      bubble.innerText
-    );
+    await navigator
+      .clipboard
+      .writeText(
+        bubble.innerText
+      );
+
 
     button.textContent =
       "Copied";
+
 
     setTimeout(
       () => {
@@ -2798,6 +3726,7 @@ async function copyBubble(button){
       },
       1000
     );
+
 
   }catch(error){
 
@@ -2815,18 +3744,26 @@ async function copyBubble(button){
 
 function newChat(){
 
-  if(controller){
+  if(
+    controller
+  ){
 
     controller.abort();
 
-    controller = null;
+    controller =
+      null;
   }
 
-  history = [];
 
-  count = 0;
+  history =
+    [];
+
+  count =
+    0;
+
 
   updateStats();
+
 
   messages.innerHTML = `
 
@@ -2914,12 +3851,15 @@ function newChat(){
 
   `;
 
+
   removeImage();
+
 
   const streaming =
     document.getElementById(
       "sideStreaming"
     );
+
 
   streaming.textContent =
     "ON";
@@ -2927,7 +3867,9 @@ function newChat(){
   streaming.style.color =
     "";
 
-  input.value = "";
+
+  input.value =
+    "";
 
   resizeInput();
 
@@ -2982,12 +3924,17 @@ function updateStats(){
     .textContent =
     count;
 
+
   document
     .getElementById(
       "modelText"
     )
     .textContent =
-    model.value
+    (
+      model.value === "auto"
+        ? "AUTO / BEST CHAT"
+        : model.value
+    )
       .toUpperCase();
 }
 
@@ -3002,7 +3949,9 @@ model.addEventListener(
    ESCAPE HTML
 ========================================================= */
 
-function escapeHTML(value){
+function escapeHTML(
+  value
+){
 
   const el =
     document.createElement(
@@ -3010,21 +3959,26 @@ function escapeHTML(value){
     );
 
   el.textContent =
-    String(value);
+    String(
+      value
+    );
 
   return el.innerHTML;
 }
 
 
 /* =========================================================
-   INIT
+   INITIALIZATION
 ========================================================= */
 
 updateStats();
 
 resizeInput();
 
+input.focus();
+
 </script>
 
 </body>
 </html>
+```
