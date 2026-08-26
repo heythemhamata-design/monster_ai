@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +30,6 @@ body{
   overflow:hidden;
   background:#000;
   color:#fff;
-
   font-family:
     Inter,
     -apple-system,
@@ -1110,6 +1108,10 @@ select{
 .messageImg{
   max-width:290px;
 
+  max-height:290px;
+
+  object-fit:contain;
+
   display:block;
 
   border-radius:13px;
@@ -1123,6 +1125,7 @@ select{
 
 .right{
   border-radius:24px;
+
   padding:14px;
 
   transform:
@@ -1472,7 +1475,7 @@ select{
 }
 
 /* =========================================================
-   MOBILE PERFORMANCE MODE
+   MOBILE — ANIMATIONS RESTORED
 ========================================================= */
 
 @media(max-width:750px){
@@ -1481,10 +1484,6 @@ select{
     display:block;
     padding:0;
   }
-
-  /* -------------------------------------------------------
-     SIDEBAR
-  ------------------------------------------------------- */
 
   .sidebar{
     position:fixed;
@@ -1502,39 +1501,16 @@ select{
       left .25s ease;
 
     transform:none;
-
-    backdrop-filter:
-      blur(10px)
-      saturate(110%);
-
-    -webkit-backdrop-filter:
-      blur(10px)
-      saturate(110%);
-  }
-
-  .sidebar:hover{
-    transform:none;
-
-    backdrop-filter:
-      blur(16px)
-      saturate(120%);
-
-    -webkit-backdrop-filter:
-      blur(16px)
-      saturate(120%);
   }
 
   .sidebar.open{
     left:10px;
   }
 
-  /* -------------------------------------------------------
-     CENTER
-  ------------------------------------------------------- */
-
   .center{
     width:100%;
     height:100%;
+
     border-radius:0;
 
     transform:none;
@@ -1548,10 +1524,6 @@ select{
     display:none;
   }
 
-  /* -------------------------------------------------------
-     MESSAGES
-  ------------------------------------------------------- */
-
   .messages{
     padding-left:14px;
     padding-right:14px;
@@ -1561,132 +1533,102 @@ select{
     font-size:36px;
   }
 
-  /* -------------------------------------------------------
-     COMPOSER
-  ------------------------------------------------------- */
-
   .composerLayer{
     padding-left:9px;
     padding-right:9px;
   }
 
-  /* -------------------------------------------------------
-     GRID
-  ------------------------------------------------------- */
+  /*
+    IMPORTANT:
+    Nothing below disables animations.
+    Grid, particles and all three orbs
+    remain animated on mobile.
+  */
 
   .grid{
-    opacity:.55;
-
     animation:
-      gridMove 32s
+      gridMove 24s
       linear
       infinite;
   }
 
-  /* -------------------------------------------------------
-     PARTICLES
-     28 instead of 130-260
-  ------------------------------------------------------- */
-
   .particle{
-
-    box-shadow:
-      0 0 6px
-        rgba(0,230,255,.35);
-
     animation:
+      float var(--d)
+      ease-in-out
+      infinite
+      alternate,
+
       blink 4s
       ease-in-out
       infinite;
   }
 
-  /* -------------------------------------------------------
-     ORBS
-     Static on mobile
-  ------------------------------------------------------- */
-
   .orb{
-    filter:blur(4px);
+    filter:
+      blur(2px);
 
-    animation:none !important;
+    animation-play-state:
+      running;
   }
 
-  /* -------------------------------------------------------
-     GLASS
-     Lower blur on mobile
-  ------------------------------------------------------- */
+  .orb.one{
+    animation:
+      orbOne 20s
+      ease-in-out
+      infinite
+      alternate;
+  }
+
+  .orb.two{
+    animation:
+      orbTwo 24s
+      ease-in-out
+      infinite
+      alternate;
+  }
+
+  .orb.three{
+    animation:
+      orbThree 18s
+      ease-in-out
+      infinite
+      alternate;
+  }
+
+  /*
+    Keep glass effect, only slightly lower
+    than desktop to avoid excessive GPU load.
+  */
 
   .glass{
     backdrop-filter:
-      blur(12px)
-      saturate(120%);
+      blur(18px)
+      saturate(130%);
 
     -webkit-backdrop-filter:
-      blur(12px)
-      saturate(120%);
+      blur(18px)
+      saturate(130%);
   }
 
-  /* -------------------------------------------------------
-     RIGHT PANEL
-     Normally hidden by <=1100px,
-     kept optimized if viewport/layout changes.
-  ------------------------------------------------------- */
-
-  .right{
-    transform:none;
-
+  .sidebar:hover{
     backdrop-filter:
-      blur(10px)
-      saturate(110%);
+      blur(22px)
+      saturate(140%);
 
     -webkit-backdrop-filter:
-      blur(10px)
-      saturate(110%);
+      blur(22px)
+      saturate(140%);
   }
-
-  .right:hover{
-    transform:none;
-
-    backdrop-filter:
-      blur(16px)
-      saturate(120%);
-
-    -webkit-backdrop-filter:
-      blur(16px)
-      saturate(120%);
-  }
-
-  /* -------------------------------------------------------
-     MESSAGE PERFORMANCE
-  ------------------------------------------------------- */
 
   .message{
     content-visibility:auto;
     contain-intrinsic-size:0 120px;
   }
-
-  /* -------------------------------------------------------
-     SHADOWS
-  ------------------------------------------------------- */
-
-  .sidebar,
-  .right,
-  .center{
-    box-shadow:
-      0 15px 40px
-      rgba(0,0,0,.35);
-  }
-
-  .sidebar:hover,
-  .right:hover{
-    box-shadow:
-      0 15px 40px
-      rgba(0,0,0,.40);
-  }
 }
 
 /* =========================================================
-   REDUCE MOTION
+   ACCESSIBILITY
 ========================================================= */
 
 @media(prefers-reduced-motion:reduce){
@@ -2173,11 +2115,6 @@ select{
 const API =
   "https://posts-nasa-decent-dee.trycloudflare.com/v1";
 
-/*
-  OmniRoute عندك يعرض /v1/models بدون API key،
-  لذلك نخليها فارغة.
-*/
-
 const API_KEY = "";
 
 
@@ -2301,7 +2238,7 @@ marked.setOptions({
 
 
 /* =========================================================
-   PARTICLES — OPTIMIZED
+   PARTICLES
 ========================================================= */
 
 const particleRoot =
@@ -2316,20 +2253,19 @@ function createParticles(){
   particleRoot.innerHTML = "";
 
   /*
-    Desktop:
-    90 particles
-
-    Mobile:
-    28 particles
+    Keep the original visual density.
   */
 
-  const isMobile =
-    window.innerWidth <= 750;
-
   const particleCount =
-    isMobile
-      ? 28
-      : 90;
+    Math.min(
+      260,
+      Math.max(
+        130,
+        Math.floor(
+          window.innerWidth / 5
+        )
+      )
+    );
 
   for(
     let i = 0;
@@ -2344,30 +2280,16 @@ function createParticles(){
       "particle";
 
     const size =
-      isMobile
-        ? 1 + Math.random() * 2
-        : 1 + Math.random() * 3;
+      1 + Math.random() * 4;
 
     const x =
-      (Math.random() - .5) *
-      (
-        isMobile
-          ? 220
-          : 320
-      );
+      (Math.random() - .5) * 320;
 
     const y =
-      (Math.random() - .5) *
-      (
-        isMobile
-          ? 180
-          : 260
-      );
+      (Math.random() - .5) * 260;
 
     const duration =
-      isMobile
-        ? 7 + Math.random() * 8
-        : 4 + Math.random() * 10;
+      4 + Math.random() * 10;
 
     p.style.setProperty(
       "--s",
@@ -2412,8 +2334,7 @@ createParticles();
 
 
 /*
-  Prevent repeated full particle rebuilds
-  during mobile browser resize / keyboard.
+  Only rebuild after the resize settles.
 */
 
 window.addEventListener(
@@ -2427,7 +2348,7 @@ window.addEventListener(
     particleResizeTimer =
       setTimeout(
         createParticles,
-        300
+        350
       );
   }
 );
@@ -2526,7 +2447,7 @@ function detectHeroCategory(text){
   }
 
   if(
-    /\?|how |why |what |when |where |can |could |should |help|من |ما |كيف |هل |شنو |شكون |واش /
+    /\?|how |why |what |when |where |can |could |should |help|من |ما |كيف |هل |شنو |شكون |واش/
       .test(value)
   ){
 
@@ -2566,7 +2487,8 @@ function updateHero(
     );
 
   if(
-    title.textContent.trim() === next
+    title.textContent.trim() ===
+    next
   ){
 
     return;
@@ -2615,7 +2537,6 @@ function handleImage(event){
     event.target.files?.[0];
 
   if(!file){
-
     return;
   }
 
@@ -2625,11 +2546,6 @@ function handleImage(event){
 
     return;
   }
-
-  /*
-    Prevent huge images from destroying
-    mobile memory.
-  */
 
   if(
     file.size >
@@ -2767,7 +2683,6 @@ function createMessage(type){
 
   avatar.className =
     "avatar " +
-
     (
       type === "user"
         ? "youAvatar"
@@ -3153,10 +3068,6 @@ async function sendMessage(){
 
   try{
 
-    /*
-      Convert UI "Auto" to a real OmniRoute model.
-    */
-
     const selectedModel =
       model.value === "auto"
         ? "auto/best-chat"
@@ -3168,12 +3079,6 @@ async function sendMessage(){
         "application/json"
     };
 
-
-    /*
-      API_KEY is empty by default.
-      Authorization is only added when
-      a key is actually configured.
-    */
 
     if(
       API_KEY
@@ -3293,10 +3198,6 @@ async function sendMessage(){
         );
 
 
-      /*
-        Normalize Windows line endings.
-      */
-
       buffer =
         buffer.replace(
           /\r\n/g,
@@ -3373,10 +3274,6 @@ async function sendMessage(){
 
             answer +=
               delta;
-
-            /*
-              Keep the existing Markdown behavior.
-            */
 
             ai.innerHTML =
               marked.parse(
@@ -3463,11 +3360,6 @@ async function sendMessage(){
       }
     }
 
-
-    /*
-      If a response came back but content was empty,
-      show a useful message instead of a blank bubble.
-    */
 
     if(
       !answer.trim()
@@ -3981,4 +3873,3 @@ input.focus();
 
 </body>
 </html>
-```
