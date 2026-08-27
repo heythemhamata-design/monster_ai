@@ -2565,7 +2565,9 @@ async function sendMessage(){
       );
     }
 
-   const reader =
+javascript
+    
+const reader =
   response.body.getReader();
 
 const decoder =
@@ -2578,6 +2580,257 @@ let answer = "";
 let streamFinished = false;
 
 while(!streamFinished){
+
+  const {
+    value,
+    done
+  } =
+    await reader.read();
+
+  if(done){
+
+    streamFinished = true;
+
+    break;
+  }
+
+  const chunk =
+    decoder.decode(
+      value,
+      { stream:true }
+    );
+
+  buffer += chunk;
+
+
+  /*
+     IMPORTANT:
+     Detect [DONE] even when:
+     - it has no final newline
+     - it arrives inside another chunk
+     - the server keeps the connection open
+  */
+
+  if(
+    buffer.includes(
+      "data: [DONE]"
+    ) ||
+    buffer.includes(
+      "data:[DONE]"
+    )
+  ){
+
+    streamFinished = true;
+
+    /*
+       Process everything before [DONE].
+    */
+
+    const doneIndex =
+      buffer.indexOf(
+        "data: [DONE]"
+      );
+
+    const doneIndex2 =
+      buffer.indexOf(
+        "data:[DONE]"
+      );
+
+    let stopIndex = doneIndex;
+
+    if(
+      stopIndex === -1 ||
+      (
+        doneIndex2 !== -1 &&
+        doneIndex2 < stopIndex
+      )
+    ){
+
+      stopIndex =
+        doneIndex2;
+    }
+
+    const beforeDone =
+      buffer.slice(
+        0,
+        stopIndex
+      );
+
+    const lines =
+      beforeDone.split(
+        "\n"
+      );
+
+    for(
+      const line of lines
+    ){
+
+      const clean =
+        line.trim();
+
+      if(
+        !clean ||
+        !clean.startsWith(
+          "data:"
+        )
+      ){
+
+        continue;
+      }
+
+      const raw =
+        clean
+          .slice(5)
+          .trim();
+
+      if(
+        !raw ||
+        raw === "[DONE]"
+      ){
+
+        continue;
+      }
+
+      try{
+
+        const json =
+          JSON.parse(raw);
+
+        const delta =
+          json
+            ?.choices?.[0]
+            ?.delta
+            ?.content;
+
+        if(delta){
+
+          answer += delta;
+
+          ai.innerHTML =
+            marked.parse(
+              answer
+            );
+
+          scrollBottom();
+        }
+
+      }catch(error){
+
+        console.warn(
+          "SSE parse warning:",
+          error
+        );
+      }
+    }
+
+
+    buffer = "";
+
+
+    /*
+       Stop reading immediately.
+    */
+
+    try{
+
+      await reader.cancel();
+
+    }catch(error){
+
+      console.warn(
+        "Reader cancel warning:",
+        error
+      );
+    }
+
+    break;
+  }
+
+
+  /*
+     Normal SSE processing.
+  */
+
+  const lines =
+    buffer.split(
+      "\n"
+    );
+
+  buffer =
+    lines.pop() || "";
+
+
+  for(
+    const line of lines
+  ){
+
+    const clean =
+      line.trim();
+
+    if(
+      !clean ||
+      !clean.startsWith(
+        "data:"
+      )
+    ){
+
+      continue;
+    }
+
+
+    const raw =
+      clean
+        .slice(5)
+        .trim();
+
+
+    if(
+      raw === "[DONE]"
+    ){
+
+      streamFinished = true;
+
+      break;
+    }
+
+
+    if(!raw){
+      continue;
+    }
+
+
+    try{
+
+      const json =
+        JSON.parse(raw);
+
+      const delta =
+        json
+          ?.choices?.[0]
+          ?.delta
+          ?.content;
+
+      if(delta){
+
+        answer += delta;
+
+        ai.innerHTML =
+          marked.parse(
+            answer
+          );
+
+        scrollBottom();
+      }
+
+    }catch(error){
+
+      console.warn(
+        "SSE parse warning:",
+        error
+      );
+    }
+  }
+}
 
   const {
     value,
