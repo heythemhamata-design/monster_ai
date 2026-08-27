@@ -2459,6 +2459,32 @@ async function sendMessage(){
     ];
   }
 
+  if(hadImage){
+
+  history[
+    history.length - 1
+  ].content = [
+
+    {
+      type:"text",
+      text:
+        text ||
+        "Analyze this image."
+    },
+
+    {
+      type:"image_url",
+      image_url:{
+        url:
+          selectedImage
+      }
+    }
+
+  ];
+
+  await saveCurrentConversation();
+}
+
   removeImage();
 
   input.value = "";
