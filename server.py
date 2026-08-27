@@ -1382,120 +1382,120 @@ class Handler(
                 return
 
 
-            # =================================================
-            # STREAM RESPONSE
-            # =================================================
+           # =================================================
+# STREAM RESPONSE
+# =================================================
 
-            self.send_response(
-                200
+self.send_response(200)
+
+self.send_header(
+    "Content-Type",
+    "text/event-stream; charset=utf-8"
+)
+
+self.send_header(
+    "Cache-Control",
+    "no-cache, no-transform"
+)
+
+self.send_header(
+    "Connection",
+    "keep-alive"
+)
+
+self.send_header(
+    "X-Conversation-ID",
+    conversation_id
+)
+
+self.end_headers()
+
+
+assistant_answer = ""
+
+buffer = ""
+
+stream_finished = False
+
+
+while not stream_finished:
+
+    chunk = response.read(4096)
+
+    if not chunk:
+        break
+
+    decoded = chunk.decode(
+        "utf-8",
+        errors="replace"
+    )
+
+    buffer += decoded
+
+    lines = buffer.split("\n")
+
+    buffer = lines.pop() or ""
+
+
+    for line in lines:
+
+        clean = line.strip()
+
+        if not clean:
+            continue
+
+        if not clean.startswith("data:"):
+            continue
+
+        raw = clean[5:].strip()
+
+
+        if raw == "[DONE]":
+
+            stream_finished = True
+
+            break
+
+
+        try:
+
+            packet = json.loads(raw)
+
+            choices = packet.get(
+                "choices",
+                []
             )
 
-            self.send_header(
-                "Content-Type",
-                "text/event-stream; charset=utf-8"
+            if not choices:
+                continue
+
+            delta = (
+                choices[0]
+                .get("delta", {})
+                .get("content")
             )
 
-            self.send_header(
-                "Cache-Control",
-                "no-cache, no-transform"
-            )
+            if delta:
 
-            self.send_header(
-                "Connection",
-                "keep-alive"
-            )
+                assistant_answer += delta
 
-            self.send_header(
-                "X-Conversation-ID",
-                conversation_id
-            )
+        except Exception:
 
-            self.end_headers()
+            pass
 
 
-            assistant_answer = ""
+    # Forward the original SSE packet.
+    try:
 
-            buffer = ""
+        self.wfile.write(chunk)
+        self.wfile.flush()
 
+    except BrokenPipeError:
 
-            while True:
-
-                chunk = response.read(
-                    4096
-                )
-
-                if not chunk:
-                    break
-
-                decoded = chunk.decode(
-                    "utf-8",
-                    errors="replace"
-                )
-
-                buffer += decoded
-
-                lines = buffer.split(
-                    "\n"
-                )
-
-                buffer = (
-                    lines.pop()
-                    or ""
-                )
+        break
 
 
-                for line in lines:
-
-                    clean = line.strip()
-
-                    if not clean:
-                        continue
-
-                    if not clean.startswith(
-                        "data:"
-                    ):
-                        continue
-
-                    raw = clean[5:].strip()
-
-                    if raw == "[DONE]":
-
-                        continue
-
-                    try:
-
-                        packet = json.loads(
-                            raw
-                        )
-
-                        delta = (
-                            packet
-                            .get("choices", [{}])[0]
-                            .get("delta", {})
-                            .get("content")
-                        )
-
-                        if delta:
-
-                            assistant_answer += (
-                                delta
-                            )
-
-                    except Exception:
-
-                        pass
-
-
-                # Send original SSE bytes
-                # to browser.
-                self.wfile.write(
-                    chunk
-                )
-
-                self.wfile.flush()
-
-
-            response.close()
+response.close()
 
 
             # =================================================
