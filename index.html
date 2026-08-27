@@ -3072,16 +3072,66 @@ function newChat(){
    CLEAR
 ========================================================= */
 
-function clearChat(){
+async function clearChat(){
 
   if(
-    confirm(
-      "Clear this conversation?"
-    )
+    !currentConversationId
   ){
 
     newChat();
 
+    return;
+  }
+
+  if(
+    !confirm(
+      "Delete this conversation?"
+    )
+  ){
+
+    return;
+  }
+
+  try{
+
+    const response =
+      await fetch(
+        API +
+        "/conversations/" +
+        encodeURIComponent(
+          currentConversationId
+        ),
+        {
+          method:"DELETE"
+        }
+      );
+
+    if(!response.ok){
+
+      throw new Error(
+        "Could not delete conversation."
+      );
+    }
+
+    currentConversationId =
+      null;
+
+    history = [];
+
+    count = 0;
+
+    updateStats();
+
+    await loadRecentConversations();
+
+    await newChat();
+
+  }catch(error){
+
+    console.error(
+      "Delete conversation error:",
+      error
+    );
   }
 }
 
