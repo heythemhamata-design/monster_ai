@@ -3099,27 +3099,20 @@ while(!streamFinished){
       `;
     }
 
-  }finally{
+  finally{
 
-    send.textContent =
-      "Send";
+  send.textContent = "Send";
 
-    send.classList.remove(
-      "stop"
-    );
+  send.classList.remove("stop");
 
-    controller = null;
+  controller = null;
 
-    streaming.textContent =
-      "ON";
+  streaming.textContent = "ON";
 
-    streaming.style.color =
-      "";
+  streaming.style.color = "";
 
-    input.focus();
-  }
+  input.focus();
 }
-
 /* =========================================================
    SEND / STOP
 ========================================================= */
