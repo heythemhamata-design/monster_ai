@@ -1280,7 +1280,7 @@ class Handler(
             # =================================================
 
             omni_url = os.getenv(
-                "OMNIROUTE_URL",
+                "http://localhost:20128/v1",
                 ""
             )
 
