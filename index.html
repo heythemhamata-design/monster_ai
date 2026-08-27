@@ -1886,11 +1886,15 @@ function handleLocalDeveloperResponse(){
     marked.parse(response);
 
   history.push({
-    role:"assistant",
-    content:response
-  });
+  role:"assistant",
+  content:answer
+});
 
-  count++;
+count++;
+
+updateStats();
+
+await saveCurrentConversation();
 
   updateStats();
 
