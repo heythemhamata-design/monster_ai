@@ -2105,17 +2105,13 @@ async function sendMessage(){
     const response =
       await fetch(
         API +
-        "/chat/completions",
+        "/chat/",
         {
           method:"POST",
 
           headers:{
             "Content-Type":
               "application/json",
-
-            "Authorization":
-              "Bearer " +
-              API_KEY
           },
 
           body:
