@@ -1897,6 +1897,375 @@ function handleLocalDeveloperResponse(){
   scrollBottom();
 }
 
+  /* =========================================================
+   CONVERSATION STORAGE
+========================================================= */
+
+async function createServerConversation(){
+
+  const response =
+    await fetch(
+      API + "/conversations",
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":
+            "application/json"
+        }
+      }
+    );
+
+  if(!response.ok){
+
+    throw new Error(
+      "Could not create conversation."
+    );
+  }
+
+  const conversation =
+    await response.json();
+
+  currentConversationId =
+    conversation.id;
+
+  return conversation;
+}
+
+
+async function saveCurrentConversation(){
+
+  if(!currentConversationId){
+    return;
+  }
+
+  try{
+
+    await fetch(
+      API +
+      "/conversations/" +
+      encodeURIComponent(
+        currentConversationId
+      ) +
+      "/messages",
+      {
+        method:"POST",
+
+        headers:{
+          "Content-Type":
+            "application/json"
+        },
+
+        body:JSON.stringify({
+          messages:history
+        })
+      }
+    );
+
+    await loadRecentConversations();
+
+  }catch(error){
+
+    console.error(
+      "Conversation save error:",
+      error
+    );
+  }
+}
+
+
+async function loadRecentConversations(){
+
+  try{
+
+    const response =
+      await fetch(
+        API + "/conversations"
+      );
+
+    if(!response.ok){
+      return;
+    }
+
+    const conversations =
+      await response.json();
+
+    renderRecentConversations(
+      conversations
+    );
+
+  }catch(error){
+
+    console.error(
+      "Recent conversations error:",
+      error
+    );
+  }
+}
+
+
+function renderRecentConversations(
+  conversations
+){
+
+  const sidebar =
+    document.getElementById(
+      "sidebar"
+    );
+
+  if(!sidebar){
+    return;
+  }
+
+  const label =
+    sidebar.querySelector(
+      ".label"
+    );
+
+  if(!label){
+    return;
+  }
+
+  sidebar
+    .querySelectorAll(
+      ".dynamic-chat"
+    )
+    .forEach(
+      element =>
+        element.remove()
+    );
+
+
+  conversations.forEach(
+    conversation => {
+
+      const chat =
+        document.createElement(
+          "div"
+        );
+
+      chat.className =
+        "chat dynamic-chat";
+
+      chat.dataset.id =
+        conversation.id;
+
+      chat.textContent =
+        conversation.title ||
+        "New Conversation";
+
+      if(
+        conversation.id ===
+        currentConversationId
+      ){
+
+        chat.classList.add(
+          "active"
+        );
+      }
+
+      chat.addEventListener(
+        "click",
+        () => {
+
+          openConversation(
+            conversation.id
+          );
+
+        }
+      );
+
+      label.after(
+        chat
+      );
+
+    }
+  );
+}
+
+
+async function openConversation(
+  conversationId
+){
+
+  try{
+
+    if(controller){
+
+      controller.abort();
+
+      controller = null;
+    }
+
+    const response =
+      await fetch(
+        API +
+        "/conversations/" +
+        encodeURIComponent(
+          conversationId
+        )
+      );
+
+    if(!response.ok){
+
+      throw new Error(
+        "Conversation not found."
+      );
+    }
+
+    const conversation =
+      await response.json();
+
+    currentConversationId =
+      conversation.id;
+
+    history =
+      Array.isArray(
+        conversation.messages
+      )
+        ? conversation.messages
+        : [];
+
+    count =
+      history.length;
+
+    updateStats();
+
+    renderConversation();
+
+    await loadRecentConversations();
+
+    input.focus();
+
+  }catch(error){
+
+    console.error(
+      "Open conversation error:",
+      error
+    );
+
+  }
+}
+
+
+function renderConversation(){
+
+  messages.innerHTML = "";
+
+  history.forEach(
+    message => {
+
+      if(
+        message.role === "user"
+      ){
+
+        const bubble =
+          createMessage(
+            "user"
+          );
+
+        let content =
+          message.content;
+
+        if(
+          Array.isArray(content)
+        ){
+
+          const textParts = [];
+
+          content.forEach(
+            item => {
+
+              if(
+                item.type ===
+                "text"
+              ){
+
+                textParts.push(
+                  item.text || ""
+                );
+
+              }else if(
+                item.type ===
+                "image_url"
+              ){
+
+                const img =
+                  document.createElement(
+                    "img"
+                  );
+
+                img.src =
+                  item.image_url?.url ||
+                  "";
+
+                img.className =
+                  "messageImg";
+
+                bubble.appendChild(
+                  img
+                );
+              }
+
+            }
+          );
+
+          if(textParts.length){
+
+            const textEl =
+              document.createElement(
+                "div"
+              );
+
+            textEl.textContent =
+              textParts.join(
+                "\n"
+              );
+
+            bubble.appendChild(
+              textEl
+            );
+          }
+
+        }else{
+
+          const textEl =
+            document.createElement(
+              "div"
+            );
+
+          textEl.textContent =
+            content || "";
+
+          bubble.appendChild(
+            textEl
+          );
+        }
+
+      }else if(
+        message.role ===
+        "assistant"
+      ){
+
+        const bubble =
+          createMessage(
+            "ai"
+          );
+
+        bubble.innerHTML =
+          marked.parse(
+            String(
+              message.content ||
+              ""
+            )
+          );
+
+      }
+
+    }
+  );
+
+  scrollBottom();
+}
 /* =========================================================
    SEND
 ========================================================= */
@@ -1908,6 +2277,26 @@ async function sendMessage(){
 
   const hadImage =
     Boolean(selectedImage);
+  if(!currentConversationId){
+
+  try{
+
+    await createServerConversation();
+
+  }catch(error){
+
+    console.error(
+      "Conversation creation error:",
+      error
+    );
+
+    alert(
+      "Could not create conversation."
+    );
+
+    return;
+  }
+}
 
   if(
     !text &&
