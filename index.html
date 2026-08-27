@@ -1874,7 +1874,7 @@ function createMessage(type){
    LOCAL DEVELOPER RESPONSE
 ========================================================= */
 
-function handleLocalDeveloperResponse(){
+async function handleLocalDeveloperResponse(){
 
   const response =
     getDeveloperResponse();
@@ -2525,7 +2525,7 @@ async function sendMessage(){
     const response =
       await fetch(
         API +
-        "/chat/",
+        "/chat",
         {
           method:"POST",
 
@@ -2537,6 +2537,7 @@ async function sendMessage(){
           body:
             JSON.stringify({
               model:model.value,
+              conversation_id:currentConversationId,
               messages:payload,
               stream:true
             }),
@@ -2933,7 +2934,7 @@ async function copyBubble(button){
    NEW CHAT
 ========================================================= */
 
-function newChat(){
+async function newChat(){
 
   if(controller){
 
