@@ -2565,22 +2565,103 @@ async function sendMessage(){
       );
     }
 
-    const reader =
-      response.body.getReader();
+   const reader =
+  response.body.getReader();
 
-    const decoder =
-      new TextDecoder("utf-8");
+const decoder =
+  new TextDecoder("utf-8");
 
-    let buffer = "";
+let buffer = "";
 
-    let answer = "";
+let answer = "";
 
-    while(true){
+let streamFinished = false;
 
-      const {
-        value,
-        done
-      } =
+while(!streamFinished){
+
+  const {
+    value,
+    done
+  } =
+    await reader.read();
+
+  if(done){
+    break;
+  }
+
+  buffer +=
+    decoder.decode(
+      value,
+      { stream:true }
+    );
+
+  const lines =
+    buffer.split("\n");
+
+  buffer =
+    lines.pop() || "";
+
+  for(
+    const line of lines
+  ){
+
+    const clean =
+      line.trim();
+
+    if(
+      !clean ||
+      !clean.startsWith("data:")
+    ){
+      continue;
+    }
+
+    const raw =
+      clean
+        .slice(5)
+        .trim();
+
+    if(
+      raw === "[DONE]"
+    ){
+
+      streamFinished = true;
+
+      break;
+    }
+
+    try{
+
+      const json =
+        JSON.parse(raw);
+
+      const delta =
+        json
+          ?.choices?.[0]
+          ?.delta
+          ?.content;
+
+      if(delta){
+
+        answer +=
+          delta;
+
+        ai.innerHTML =
+          marked.parse(
+            answer
+          );
+
+        scrollBottom();
+      }
+
+    }catch(error){
+
+      console.warn(
+        "SSE parse warning:",
+        error
+      );
+    }
+  }
+}
         await reader.read();
 
       if(done){
