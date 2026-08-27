@@ -457,7 +457,6 @@ select{
   flex:1;
   min-height:0;
   position:relative;
-  overflow:hidden;
 }
 
 .messages{
@@ -750,13 +749,9 @@ select{
   bottom:0;
   padding:16px 6vw 22px;
   pointer-events:none;
-  background:linear-gradient(
-    to bottom,
-    transparent,
-    rgba(3,5,9,0.95) 40%,
-    var(--bg-dark) 100%
-  );
+  background:linear-gradient(to bottom, transparent, rgba(3,5,9,0.95) 40%, var(--bg-dark) 100%);
 }
+
 .composer{
   max-width:840px;
   margin:auto;
@@ -1346,7 +1341,10 @@ select{
 ========================================================= */
 
 const API =
-  "/api";
+  "https://english-lonely-tue-computing.trycloudflare.com/v1";
+
+const API_KEY =
+  "YOUR_API_KEY_HERE";
 
 /* =========================================================
    DEVELOPER IDENTITY
@@ -1428,7 +1426,7 @@ let controller = null;
 
 let count = 0;
 
-let currentConversationId = null;
+let heroTimer = null;
 
 /* =========================================================
    DOM
@@ -1879,7 +1877,7 @@ function createMessage(type){
    LOCAL DEVELOPER RESPONSE
 ========================================================= */
 
-async function handleLocalDeveloperResponse(){
+function handleLocalDeveloperResponse(){
 
   const response =
     getDeveloperResponse();
@@ -1891,390 +1889,17 @@ async function handleLocalDeveloperResponse(){
     marked.parse(response);
 
   history.push({
-  role:"assistant",
-  content:answer
-});
+    role:"assistant",
+    content:response
+  });
 
-count++;
-
-updateStats();
-
-await saveCurrentConversation();
+  count++;
 
   updateStats();
 
   scrollBottom();
 }
 
-  /* =========================================================
-   CONVERSATION STORAGE
-========================================================= */
-
-async function createServerConversation(){
-
-  const response =
-    await fetch(
-      API + "/conversations",
-      {
-        method:"POST",
-        headers:{
-          "Content-Type":
-            "application/json"
-        }
-      }
-    );
-
-  if(!response.ok){
-
-    throw new Error(
-      "Could not create conversation."
-    );
-  }
-
-  const conversation =
-    await response.json();
-
-  currentConversationId =
-    conversation.id;
-
-  return conversation;
-}
-
-
-async function saveCurrentConversation(){
-
-  if(!currentConversationId){
-    return;
-  }
-
-  try{
-
-    await fetch(
-      API +
-      "/conversations/" +
-      encodeURIComponent(
-        currentConversationId
-      ) +
-      "/messages",
-      {
-        method:"POST",
-
-        headers:{
-          "Content-Type":
-            "application/json"
-        },
-
-        body:JSON.stringify({
-          messages:history
-        })
-      }
-    );
-
-    await loadRecentConversations();
-
-  }catch(error){
-
-    console.error(
-      "Conversation save error:",
-      error
-    );
-  }
-}
-
-
-async function loadRecentConversations(){
-
-  try{
-
-    const response =
-      await fetch(
-        API + "/conversations"
-      );
-
-    if(!response.ok){
-      return;
-    }
-
-    const conversations =
-      await response.json();
-
-    renderRecentConversations(
-      conversations
-    );
-
-  }catch(error){
-
-    console.error(
-      "Recent conversations error:",
-      error
-    );
-  }
-}
-
-
-function renderRecentConversations(
-  conversations
-){
-
-  const sidebar =
-    document.getElementById(
-      "sidebar"
-    );
-
-  if(!sidebar){
-    return;
-  }
-
-  const label =
-    sidebar.querySelector(
-      ".label"
-    );
-
-  if(!label){
-    return;
-  }
-
-  sidebar
-    .querySelectorAll(
-      ".dynamic-chat"
-    )
-    .forEach(
-      element =>
-        element.remove()
-    );
-
-
-  conversations.forEach(
-    conversation => {
-
-      const chat =
-        document.createElement(
-          "div"
-        );
-
-      chat.className =
-        "chat dynamic-chat";
-
-      chat.dataset.id =
-        conversation.id;
-
-      chat.textContent =
-        conversation.title ||
-        "New Conversation";
-
-      if(
-        conversation.id ===
-        currentConversationId
-      ){
-
-        chat.classList.add(
-          "active"
-        );
-      }
-
-      chat.addEventListener(
-        "click",
-        () => {
-
-          openConversation(
-            conversation.id
-          );
-
-        }
-      );
-
-      label.after(
-        chat
-      );
-
-    }
-  );
-}
-
-
-async function openConversation(
-  conversationId
-){
-
-  try{
-
-    if(controller){
-
-      controller.abort();
-
-      controller = null;
-    }
-
-    const response =
-      await fetch(
-        API +
-        "/conversations/" +
-        encodeURIComponent(
-          conversationId
-        )
-      );
-
-    if(!response.ok){
-
-      throw new Error(
-        "Conversation not found."
-      );
-    }
-
-    const conversation =
-      await response.json();
-
-    currentConversationId =
-      conversation.id;
-
-    history =
-      Array.isArray(
-        conversation.messages
-      )
-        ? conversation.messages
-        : [];
-
-    count =
-      history.length;
-
-    updateStats();
-
-    renderConversation();
-
-    await loadRecentConversations();
-
-    input.focus();
-
-  }catch(error){
-
-    console.error(
-      "Open conversation error:",
-      error
-    );
-
-  }
-}
-
-
-function renderConversation(){
-
-  messages.innerHTML = "";
-
-  history.forEach(
-    message => {
-
-      if(
-        message.role === "user"
-      ){
-
-        const bubble =
-          createMessage(
-            "user"
-          );
-
-        let content =
-          message.content;
-
-        if(
-          Array.isArray(content)
-        ){
-
-          const textParts = [];
-
-          content.forEach(
-            item => {
-
-              if(
-                item.type ===
-                "text"
-              ){
-
-                textParts.push(
-                  item.text || ""
-                );
-
-              }else if(
-                item.type ===
-                "image_url"
-              ){
-
-                const img =
-                  document.createElement(
-                    "img"
-                  );
-
-                img.src =
-                  item.image_url?.url ||
-                  "";
-
-                img.className =
-                  "messageImg";
-
-                bubble.appendChild(
-                  img
-                );
-              }
-
-            }
-          );
-
-          if(textParts.length){
-
-            const textEl =
-              document.createElement(
-                "div"
-              );
-
-            textEl.textContent =
-              textParts.join(
-                "\n"
-              );
-
-            bubble.appendChild(
-              textEl
-            );
-          }
-
-        }else{
-
-          const textEl =
-            document.createElement(
-              "div"
-            );
-
-          textEl.textContent =
-            content || "";
-
-          bubble.appendChild(
-            textEl
-          );
-        }
-
-      }else if(
-        message.role ===
-        "assistant"
-      ){
-
-        const bubble =
-          createMessage(
-            "ai"
-          );
-
-        bubble.innerHTML =
-          marked.parse(
-            String(
-              message.content ||
-              ""
-            )
-          );
-
-      }
-
-    }
-  );
-
-  scrollBottom();
-}
 /* =========================================================
    SEND
 ========================================================= */
@@ -2286,27 +1911,6 @@ async function sendMessage(){
 
   const hadImage =
     Boolean(selectedImage);
-  
-  if(!currentConversationId){
-
-  try{
-
-    await createServerConversation();
-
-  }catch(error){
-
-    console.error(
-      "Conversation creation error:",
-      error
-    );
-
-    alert(
-      "Could not create conversation."
-    );
-
-    return;
-  }
-}
 
   if(
     !text &&
@@ -2464,32 +2068,6 @@ async function sendMessage(){
     ];
   }
 
-  if(hadImage){
-
-  history[
-    history.length - 1
-  ].content = [
-
-    {
-      type:"text",
-      text:
-        text ||
-        "Analyze this image."
-    },
-
-    {
-      type:"image_url",
-      image_url:{
-        url:
-          selectedImage
-      }
-    }
-
-  ];
-
-  await saveCurrentConversation();
-}
-
   removeImage();
 
   input.value = "";
@@ -2530,19 +2108,22 @@ async function sendMessage(){
     const response =
       await fetch(
         API +
-        "/chat",
+        "/chat/completions",
         {
           method:"POST",
 
           headers:{
             "Content-Type":
               "application/json",
+
+            "Authorization":
+              "Bearer " +
+              API_KEY
           },
 
           body:
             JSON.stringify({
               model:model.value,
-              conversation_id:currentConversationId,
               messages:payload,
               stream:true
             }),
@@ -2570,356 +2151,22 @@ async function sendMessage(){
       );
     }
 
-javascript
-    
-const reader =
-  response.body.getReader();
+    const reader =
+      response.body.getReader();
 
-const decoder =
-  new TextDecoder("utf-8");
+    const decoder =
+      new TextDecoder("utf-8");
 
-let buffer = "";
+    let buffer = "";
 
-let answer = "";
+    let answer = "";
 
-let streamFinished = false;
+    while(true){
 
-while(!streamFinished){
-
-  const {
-    value,
-    done
-  } =
-    await reader.read();
-
-  if(done){
-
-    streamFinished = true;
-
-    break;
-  }
-
-  const chunk =
-    decoder.decode(
-      value,
-      { stream:true }
-    );
-
-  buffer += chunk;
-
-
-  /*
-     IMPORTANT:
-     Detect [DONE] even when:
-     - it has no final newline
-     - it arrives inside another chunk
-     - the server keeps the connection open
-  */
-
-  if(
-    buffer.includes(
-      "data: [DONE]"
-    ) ||
-    buffer.includes(
-      "data:[DONE]"
-    )
-  ){
-
-    streamFinished = true;
-
-    /*
-       Process everything before [DONE].
-    */
-
-    const doneIndex =
-      buffer.indexOf(
-        "data: [DONE]"
-      );
-
-    const doneIndex2 =
-      buffer.indexOf(
-        "data:[DONE]"
-      );
-
-    let stopIndex = doneIndex;
-
-    if(
-      stopIndex === -1 ||
-      (
-        doneIndex2 !== -1 &&
-        doneIndex2 < stopIndex
-      )
-    ){
-
-      stopIndex =
-        doneIndex2;
-    }
-
-    const beforeDone =
-      buffer.slice(
-        0,
-        stopIndex
-      );
-
-    const lines =
-      beforeDone.split(
-        "\n"
-      );
-
-    for(
-      const line of lines
-    ){
-
-      const clean =
-        line.trim();
-
-      if(
-        !clean ||
-        !clean.startsWith(
-          "data:"
-        )
-      ){
-
-        continue;
-      }
-
-      const raw =
-        clean
-          .slice(5)
-          .trim();
-
-      if(
-        !raw ||
-        raw === "[DONE]"
-      ){
-
-        continue;
-      }
-
-      try{
-
-        const json =
-          JSON.parse(raw);
-
-        const delta =
-          json
-            ?.choices?.[0]
-            ?.delta
-            ?.content;
-
-        if(delta){
-
-          answer += delta;
-
-          ai.innerHTML =
-            marked.parse(
-              answer
-            );
-
-          scrollBottom();
-        }
-
-      }catch(error){
-
-        console.warn(
-          "SSE parse warning:",
-          error
-        );
-      }
-    }
-
-
-    buffer = "";
-
-
-    /*
-       Stop reading immediately.
-    */
-
-    try{
-
-      await reader.cancel();
-
-    }catch(error){
-
-      console.warn(
-        "Reader cancel warning:",
-        error
-      );
-    }
-
-    break;
-  }
-
-
-  /*
-     Normal SSE processing.
-  */
-
-  const lines =
-    buffer.split(
-      "\n"
-    );
-
-  buffer =
-    lines.pop() || "";
-
-
-  for(
-    const line of lines
-  ){
-
-    const clean =
-      line.trim();
-
-    if(
-      !clean ||
-      !clean.startsWith(
-        "data:"
-      )
-    ){
-
-      continue;
-    }
-
-
-    const raw =
-      clean
-        .slice(5)
-        .trim();
-
-
-    if(
-      raw === "[DONE]"
-    ){
-
-      streamFinished = true;
-
-      break;
-    }
-
-
-    if(!raw){
-      continue;
-    }
-
-
-    try{
-
-      const json =
-        JSON.parse(raw);
-
-      const delta =
-        json
-          ?.choices?.[0]
-          ?.delta
-          ?.content;
-
-      if(delta){
-
-        answer += delta;
-
-        ai.innerHTML =
-          marked.parse(
-            answer
-          );
-
-        scrollBottom();
-      }
-
-    }catch(error){
-
-      console.warn(
-        "SSE parse warning:",
-        error
-      );
-    }
-  }
-}
-
-  const {
-    value,
-    done
-  } =
-    await reader.read();
-
-  if(done){
-    break;
-  }
-
-  buffer +=
-    decoder.decode(
-      value,
-      { stream:true }
-    );
-
-  const lines =
-    buffer.split("\n");
-
-  buffer =
-    lines.pop() || "";
-
-  for(
-    const line of lines
-  ){
-
-    const clean =
-      line.trim();
-
-    if(
-      !clean ||
-      !clean.startsWith("data:")
-    ){
-      continue;
-    }
-
-    const raw =
-      clean
-        .slice(5)
-        .trim();
-
-    if(
-      raw === "[DONE]"
-    ){
-
-      streamFinished = true;
-
-      break;
-    }
-
-    try{
-
-      const json =
-        JSON.parse(raw);
-
-      const delta =
-        json
-          ?.choices?.[0]
-          ?.delta
-          ?.content;
-
-      if(delta){
-
-        answer +=
-          delta;
-
-        ai.innerHTML =
-          marked.parse(
-            answer
-          );
-
-        scrollBottom();
-      }
-
-    }catch(error){
-
-      console.warn(
-        "SSE parse warning:",
-        error
-      );
-    }
-  }
-}
+      const {
+        value,
+        done
+      } =
         await reader.read();
 
       if(done){
@@ -3104,20 +2351,27 @@ while(!streamFinished){
       `;
     }
 
-  finally{
+  }finally{
 
-  send.textContent = "Send";
+    send.textContent =
+      "Send";
 
-  send.classList.remove("stop");
+    send.classList.remove(
+      "stop"
+    );
 
-  controller = null;
+    controller = null;
 
-  streaming.textContent = "ON";
+    streaming.textContent =
+      "ON";
 
-  streaming.style.color = "";
+    streaming.style.color =
+      "";
 
-  input.focus();
+    input.focus();
+  }
 }
+
 /* =========================================================
    SEND / STOP
 ========================================================= */
@@ -3266,7 +2520,7 @@ async function copyBubble(button){
    NEW CHAT
 ========================================================= */
 
-async function newChat(){
+function newChat(){
 
   if(controller){
 
@@ -3384,20 +2638,6 @@ async function newChat(){
 
   resizeInput();
 
-  try{
-
-  await createServerConversation();
-
-  await loadRecentConversations();
-
-}catch(error){
-
-  console.error(
-    "New conversation error:",
-    error
-  );
-}
-
   input.focus();
 }
 
@@ -3405,66 +2645,16 @@ async function newChat(){
    CLEAR
 ========================================================= */
 
-async function clearChat(){
+function clearChat(){
 
   if(
-    !currentConversationId
+    confirm(
+      "Clear this conversation?"
+    )
   ){
 
     newChat();
 
-    return;
-  }
-
-  if(
-    !confirm(
-      "Delete this conversation?"
-    )
-  ){
-
-    return;
-  }
-
-  try{
-
-    const response =
-      await fetch(
-        API +
-        "/conversations/" +
-        encodeURIComponent(
-          currentConversationId
-        ),
-        {
-          method:"DELETE"
-        }
-      );
-
-    if(!response.ok){
-
-      throw new Error(
-        "Could not delete conversation."
-      );
-    }
-
-    currentConversationId =
-      null;
-
-    history = [];
-
-    count = 0;
-
-    updateStats();
-
-    await loadRecentConversations();
-
-    await newChat();
-
-  }catch(error){
-
-    console.error(
-      "Delete conversation error:",
-      error
-    );
   }
 }
 
@@ -3534,9 +2724,7 @@ function escapeHTML(value){
 updateStats();
 
 resizeInput();
- 
-loadRecentConversations();
-  
+
 </script>
 
 </body>
