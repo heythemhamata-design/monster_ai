@@ -3051,6 +3051,20 @@ function newChat(){
 
   resizeInput();
 
+  try{
+
+  await createServerConversation();
+
+  await loadRecentConversations();
+
+}catch(error){
+
+  console.error(
+    "New conversation error:",
+    error
+  );
+}
+
   input.focus();
 }
 
