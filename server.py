@@ -168,28 +168,35 @@ async def upload_file(file_req: FileUploadModel):
 # =========================================================
 
 async def call_omniroute_stream(messages_history: list, model_name: str):
-    """إرسال الطلب إلى OmniRoute عبر معيار OpenAI Stream"""
-    
-    # تحضير الرسائل وإضافة رسالة النظام
-    payload_messages = [{"role": "system", "content": SYSTEM_INSTRUCTION}]
-    
+    """إرسال الطلب إلى OmniRoute عبر OpenAI-compatible streaming API"""
+
+    payload_messages = [
+        {
+            "role": "system",
+            "content": SYSTEM_INSTRUCTION
+        }
+    ]
+
     for msg in messages_history:
         payload_messages.append({
             "role": msg.get("role", "user"),
             "content": msg.get("content", "")
         })
 
-    # تجهيز المسار والمجموعات
     url = OMNIROUTE_BASE_URL.rstrip("/") + "/chat/completions"
 
-headers = {
-    "Content-Type": "application/json"
-}
+    headers = {
+        "Content-Type": "application/json"
+    }
 
-if OMNIROUTE_API_KEY:
-    headers["Authorization"] = f"Bearer {OMNIROUTE_API_KEY}"
-    
-    selected_model = model_name if model_name and model_name != "auto" else DEFAULT_MODEL
+    if OMNIROUTE_API_KEY:
+        headers["Authorization"] = f"Bearer {OMNIROUTE_API_KEY}"
+
+    selected_model = (
+        model_name
+        if model_name and model_name != "auto"
+        else DEFAULT_MODEL
+    )
 
     payload = {
         "model": selected_model,
@@ -198,23 +205,44 @@ if OMNIROUTE_API_KEY:
     }
 
     async with httpx.AsyncClient(timeout=120.0) as client:
-        async with client.stream("POST", url, headers=headers, json=payload) as response:
+        async with client.stream(
+            "POST",
+            url,
+            headers=headers,
+            json=payload
+        ) as response:
+
             if response.status_code != 200:
                 err_content = await response.aread()
-                raise Exception(f"OmniRoute Error HTTP {response.status_code}: {err_content.decode('utf-8', errors='ignore')}")
+                raise Exception(
+                    f"OmniRoute Error HTTP {response.status_code}: "
+                    f"{err_content.decode('utf-8', errors='ignore')}"
+                )
 
             async for line in response.aiter_lines():
-                if line.startswith("data:"):
-                    raw_data = line[5:].strip()
-                    if raw_data == "[DONE]":
-                        break
-                    try:
-                        json_data = json.loads(raw_data)
-                        delta_content = json_data.get("choices", [{}])[0].get("delta", {}).get("content", "")
-                        if delta_content:
-                            yield delta_content
-                    except Exception:
-                        pass
+                if not line.startswith("data:"):
+                    continue
+
+                raw_data = line[5:].strip()
+
+                if raw_data == "[DONE]":
+                    break
+
+                try:
+                    json_data = json.loads(raw_data)
+
+                    delta_content = (
+                        json_data
+                        .get("choices", [{}])[0]
+                        .get("delta", {})
+                        .get("content", "")
+                    )
+
+                    if delta_content:
+                        yield delta_content
+
+                except json.JSONDecodeError:
+                    continue
 
 async def ai_stream_generator(cid: Optional[str], full_history: list, model_name: str):
     accumulated_text = ""
