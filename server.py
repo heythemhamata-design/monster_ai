@@ -3,14 +3,14 @@ import json
 import uuid
 import time
 import asyncio
-from typing import List, Optional, Union, Dict, Any
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
+import httpx
+from typing import List, Optional, Dict, Any
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-app = FastAPI(title="MONSTER AI Server")
+app = FastAPI(title="MONSTER AI Server - OmniRoute Edition")
 
 # سماح لجميع الأصول (CORS)
 app.add_middleware(
@@ -23,7 +23,28 @@ app.add_middleware(
 
 DB_FILE = "database.json"
 
-# تهيئة قاعدة البيانات المحلية للمحادثات
+# =========================================================
+# ⚙️ إعدادات OMNIROUTE
+# =========================================================
+# ضع هنا رابط OmniRoute الخاص بك (مثل رابط Cloudflare Tunnel أو Localhost)
+OMNIROUTE_BASE_URL = os.getenv(
+    "OMNIROUTE_BASE_URL", 
+    "https://recruitment-organizer-annotated-pad.trycloudflare.com/v1"
+)
+
+# ضع هنا مفتاح OmniRoute API Key (إن وجد أو اتركه كما هو)
+OMNIROUTE_API_KEY = os.getenv("OMNIROUTE_API_KEY", "YOUR_API_KEY_HERE")
+
+# اسم النموذج الافتراضي في OmniRoute (أو يتم اختياره من الواجهة)
+DEFAULT_MODEL = "auto"
+
+# تعليمات النظام الأساسية لـ MONSTER AI
+SYSTEM_INSTRUCTION = """
+أنت MONSTER AI، تم تطويرك بواسطة هيثم حماتة (Heythem Hamata)، مهندس أتمتة وباني أنظمة ذكاء اصطناعي (Automation Engineer & AI Builder).
+أنت ذكي، محترف، وتجيب بدقة وسرعة باللغة التي يكلمك بها المستخدم (عربي، فرنسي، إنجليزي، أو الدارجة).
+تخصصك: البرمجة، أنظمة الذكاء الاصطناعي، الأتمتة (n8n, APIs)، والتحليل.
+"""
+
 def load_db() -> Dict[str, Any]:
     if not os.path.exists(DB_FILE):
         return {"conversations": {}}
@@ -37,7 +58,6 @@ def save_db(data: Dict[str, Any]):
     with open(DB_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-# نماذج البيانات (Pydantic Models)
 class FileUploadModel(BaseModel):
     filename: str
     mime_type: str
@@ -54,21 +74,18 @@ class ChatRequestModel(BaseModel):
     stream: bool = True
 
 # =========================================================
-# API ROUTES (حفظ واسترجاع المحادثات والملفات)
+# API ROUTES (إدارة السجل والملفات)
 # =========================================================
 
 @app.get("/api/conversations")
 async def get_conversations():
-    """استرجاع قائمة المحادثات لظهورها في القائمة الجانبية"""
     db = load_db()
     convs = list(db["conversations"].values())
-    # ترتيب المحادثات من الأحدث إلى الأقدم
     convs.sort(key=lambda x: x.get("updated_at", 0), reverse=True)
     return convs
 
 @app.post("/api/conversations")
 async def create_conversation():
-    """إنشاء محادثة جديدة"""
     db = load_db()
     cid = str(uuid.uuid4())
     now = time.time()
@@ -85,7 +102,6 @@ async def create_conversation():
 
 @app.get("/api/conversations/{cid}")
 async def get_conversation(cid: str):
-    """فتح محادثة معينة واسترجاع رسائلها"""
     db = load_db()
     if cid not in db["conversations"]:
         raise HTTPException(status_code=404, detail="Conversation not found")
@@ -93,7 +109,6 @@ async def get_conversation(cid: str):
 
 @app.post("/api/conversations/{cid}/messages")
 async def save_messages(cid: str, req: MessagesSaveModel):
-    """حفظ سجل المحادثة تحديث عنوانها تلقائياً"""
     db = load_db()
     if cid not in db["conversations"]:
         raise HTTPException(status_code=404, detail="Conversation not found")
@@ -102,7 +117,7 @@ async def save_messages(cid: str, req: MessagesSaveModel):
     conv["messages"] = req.messages
     conv["updated_at"] = time.time()
 
-    # تحديث العنوان من أول سؤال للمستخدم إذا كان العنوان افتراضياً
+    # تحديث عنوان المحادثة بناءً على أول سؤال
     if req.messages and (conv["title"] == "New Conversation" or not conv["title"]):
         for msg in req.messages:
             if msg.get("role") == "user":
@@ -125,7 +140,6 @@ async def save_messages(cid: str, req: MessagesSaveModel):
 
 @app.delete("/api/conversations/{cid}")
 async def delete_conversation(cid: str):
-    """حذف محادثة"""
     db = load_db()
     if cid in db["conversations"]:
         del db["conversations"][cid]
@@ -134,10 +148,8 @@ async def delete_conversation(cid: str):
 
 @app.post("/api/files")
 async def upload_file(file_req: FileUploadModel):
-    """معالجة ورفع الملفات والصور"""
     extracted_text = ""
     if not file_req.mime_type.startswith("image/"):
-        # إذا كان ملفاً نصياً يتم استخراج محتواه
         try:
             if "," in file_req.data:
                 import base64
@@ -154,69 +166,92 @@ async def upload_file(file_req: FileUploadModel):
     }
 
 # =========================================================
-# STREAMING CHAT API (الذكاء الاصطناعي والبث التدفقي)
+# OMNIROUTE STREAMING CHAT ENGINE
 # =========================================================
 
-async def ai_stream_generator(prompt_text: str, cid: Optional[str] = None, full_history: list = None):
-    """مولد البث التدفقي لتوليد الردود ورسائل الـ SSE"""
+async def call_omniroute_stream(messages_history: list, model_name: str):
+    """إرسال الطلب إلى OmniRoute عبر معيار OpenAI Stream"""
     
-    # يمكنك ربطه بمحرك خارجي مثل OpenAI أو Ollama أو Gemini
-    # هنا محاكاة ذكية وسريعة للرد التدفقي:
-    response_text = f"أهلاً بك! لقد استلمت طلبك بنجاح:\n\n> **{prompt_text[:100]}**\n\nأنا نظام **MONSTER AI** الجاهز للأتمتة ومعالجة البيانات والملفات وتحليلها بأعلى كفاءة."
+    # تحضير الرسائل وإضافة رسالة النظام
+    payload_messages = [{"role": "system", "content": SYSTEM_INSTRUCTION}]
+    
+    for msg in messages_history:
+        payload_messages.append({
+            "role": msg.get("role", "user"),
+            "content": msg.get("content", "")
+        })
 
-    words = response_text.split(" ")
+    # تجهيز المسار والمجموعات
+    url = OMNIROUTE_BASE_URL.rstrip("/") + "/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {OMNIROUTE_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    selected_model = model_name if model_name and model_name != "auto" else DEFAULT_MODEL
+
+    payload = {
+        "model": selected_model,
+        "messages": payload_messages,
+        "stream": True
+    }
+
+    async with httpx.AsyncClient(timeout=120.0) as client:
+        async with client.stream("POST", url, headers=headers, json=payload) as response:
+            if response.status_code != 200:
+                err_content = await response.aread()
+                raise Exception(f"OmniRoute Error HTTP {response.status_code}: {err_content.decode('utf-8', errors='ignore')}")
+
+            async for line in response.aiter_lines():
+                if line.startswith("data:"):
+                    raw_data = line[5:].strip()
+                    if raw_data == "[DONE]":
+                        break
+                    try:
+                        json_data = json.loads(raw_data)
+                        delta_content = json_data.get("choices", [{}])[0].get("delta", {}).get("content", "")
+                        if delta_content:
+                            yield delta_content
+                    except Exception:
+                        pass
+
+async def ai_stream_generator(cid: Optional[str], full_history: list, model_name: str):
     accumulated_text = ""
+    try:
+        async for chunk in call_omniroute_stream(full_history, model_name):
+            accumulated_text += chunk
+            data = {"choices": [{"delta": {"content": chunk}}]}
+            yield f"data: {json.dumps(data)}\n\n"
+            await asyncio.sleep(0.005)
 
-    for word in words:
-        delta = word + " "
-        accumulated_text += delta
-        data = {
-            "choices": [
-                {
-                    "delta": {"content": delta}
-                }
-            ]
-        }
+    except Exception as e:
+        error_msg = f"⚠️ [OmniRoute Stream Exception]: {str(e)}"
+        accumulated_text += f"\n\n{error_msg}"
+        data = {"choices": [{"delta": {"content": f"\n\n{error_msg}"}}]}
         yield f"data: {json.dumps(data)}\n\n"
-        await asyncio.sleep(0.04)
 
     yield "data: [DONE]\n\n"
 
-    # حفظ رد الـ AI تلقائياً في المحادثة
-    if cid:
+    # حفظ الرسالة في السجل بعد اكتمال البث
+    if cid and accumulated_text.strip():
         db = load_db()
         if cid in db["conversations"]:
             conv = db["conversations"][cid]
-            if full_history is not None:
-                full_history.append({"role": "assistant", "content": accumulated_text})
-                conv["messages"] = full_history
-            else:
-                conv["messages"].append({"role": "assistant", "content": accumulated_text})
+            full_history.append({"role": "assistant", "content": accumulated_text})
+            conv["messages"] = full_history
             conv["updated_at"] = time.time()
             db["conversations"][cid] = conv
             save_db(db)
 
 @app.post("/api/chat")
 async def chat_endpoint(req: ChatRequestModel):
-    """نقطة إرسال المحادثة البثية"""
-    last_user_message = ""
-    if req.messages:
-        last_msg = req.messages[-1]
-        content = last_msg.get("content")
-        if isinstance(content, str):
-            last_user_message = content
-        elif isinstance(content, list):
-            for part in content:
-                if isinstance(part, dict) and part.get("type") == "text":
-                    last_user_message += part.get("text", "") + " "
-
     return StreamingResponse(
-        ai_stream_generator(last_user_message, req.conversation_id, req.messages),
+        ai_stream_generator(req.conversation_id, req.messages, req.model),
         media_type="text/event-stream"
     )
 
 # =========================================================
-# SERVE FRONTEND & LOGO
+# STATIC FILES (FRONTEND)
 # =========================================================
 
 @app.get("/")
