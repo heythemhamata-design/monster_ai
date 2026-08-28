@@ -33,9 +33,7 @@ OMNIROUTE_BASE_URL = os.getenv(
 )
 
 OMNIROUTE_API_KEY = os.getenv("OMNIROUTE_API_KEY")
-)
 
-# اسم النموذج الافتراضي في OmniRoute (أو يتم اختياره من الواجهة)
 DEFAULT_MODEL = "auto"
 
 # تعليمات النظام الأساسية لـ MONSTER AI
