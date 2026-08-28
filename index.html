@@ -1471,18 +1471,18 @@ async function sendMessage() {
   controller = new AbortController();
 
   try {
-    const response = await fetch(API + "/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: model.value,
-        messages: history,
-        stream: true
-      }),
-      signal: controller.signal
-    });
+   const response = await fetch(API + "/chat/completions", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    model: model.value,
+    messages: history,
+    stream: true
+  }),
+  signal: controller.signal
+});
 
     if (!response.ok) {
       const errorText = await response.text();
