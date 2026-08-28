@@ -29,11 +29,11 @@ DB_FILE = "database.json"
 # ضع هنا رابط OmniRoute الخاص بك (مثل رابط Cloudflare Tunnel أو Localhost)
 OMNIROUTE_BASE_URL = os.getenv(
     "OMNIROUTE_BASE_URL", 
-    "https://recruitment-organizer-annotated-pad.trycloudflare.com/v1"
+    "http://localhost:20128/v1"
 )
 
 # ضع هنا مفتاح OmniRoute API Key (إن وجد أو اتركه كما هو)
-OMNIROUTE_API_KEY = os.getenv("OMNIROUTE_API_KEY", "YOUR_API_KEY_HERE")
+OMNIROUTE_API_KEY = os.getenv("sk-9b0b9fd2f800659e-1058a1-3c8aabdc", "sk-9b0b9fd2f800659e-cfdbe9-0a53673b")
 
 # اسم النموذج الافتراضي في OmniRoute (أو يتم اختياره من الواجهة)
 DEFAULT_MODEL = "auto"
