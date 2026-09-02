@@ -29,7 +29,7 @@ DB_FILE = "database.json"
 # ضع هنا رابط OmniRoute الخاص بك (مثل رابط Cloudflare Tunnel أو Localhost)
 OMNIROUTE_BASE_URL = os.getenv(
     "OMNIROUTE_BASE_URL",
-    "https://firms-adsl-bingo-closure.trycloudflare.com/v1"
+    "https://basically-wings-offset-figured.trycloudflare.com/v1"
 )
 
 OMNIROUTE_API_KEY = os.getenv("OMNIROUTE_API_KEY")
