@@ -185,10 +185,11 @@ async def call_omniroute_stream(messages_history: list, model_name: str):
 
     url = OMNIROUTE_BASE_URL.rstrip("/") + "/chat/completions"
 
-   headers = {
-    "Content-Type": "application/json",
-    "Authorization": f"Bearer {OMNIROUTE_API_KEY}"
-}
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {OMNIROUTE_API_KEY}"
+    }
+
     selected_model = (
         model_name
         if model_name and model_name != "auto"
