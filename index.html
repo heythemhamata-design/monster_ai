@@ -1060,8 +1060,7 @@ select{
 /* =========================================================
    API CONFIG
 ========================================================= */
-const API = "http://localhost:20128/v1";
-/* =========================================================
+const API = "/api";/* =========================================================
    DEVELOPER IDENTITY
 ========================================================= */
 const DEVELOPER_NAME_AR = "هيثم حماتة";
@@ -1471,7 +1470,7 @@ async function sendMessage() {
   controller = new AbortController();
 
   try {
-   const response = await fetch(API + "/chat/completions", {
+const response = await fetch(API + "/chat", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
@@ -1483,7 +1482,6 @@ async function sendMessage() {
   }),
   signal: controller.signal
 });
-
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText || `HTTP ${response.status}`);
