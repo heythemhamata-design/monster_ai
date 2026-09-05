@@ -32,7 +32,7 @@ OMNIROUTE_BASE_URL = os.getenv(
     "http://localhost:20128/v1"
 )
 
-OMNIROUTE_API_KEY = os.getenv("OMNIROUTE_API_KEY")
+OMNIROUTE_API_KEY = os.getenv("sk-9b0b9fd2f800659e-cfdbe9-0a53673b")
 
 DEFAULT_MODEL = "auto"
 
